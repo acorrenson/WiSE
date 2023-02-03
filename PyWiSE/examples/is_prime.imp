@@ -1,0 +1,74 @@
+macro mod(r, a, b)
+begin
+    r = a;
+    while r >= b do
+        r = r - b
+    od
+end
+
+macro square(s, r, _i)
+begin
+  s = r;
+  _i = 1;
+  while _i < r do
+   s = s + r;
+   _i = _i + 1
+  od
+end
+
+macro sqrt(r, x, _s, _i)
+begin
+  r = x;
+  square(_s, r, _i);
+  while _s > x do
+   r = r - 1;
+   square(_s, r, _i)
+  od
+end
+
+macro is_prime_spec(result, n, _m, _i)
+begin
+  result = 1;
+  _i = 2;
+  while _i < n do
+    mod(_m, n, _i);
+    if _m == 0 then
+      result = 0
+    else skip fi;
+    _i = _i + 1
+  od
+end
+
+# Search space explodes for numbers >= 25...
+assert n >= 2 and n <= 5;
+
+result = 1;
+if n <= 3 then
+  if n > 1 then
+    result = 1
+  else
+    result = 0
+  fi
+else
+  mod(m_1, n, 2);
+  mod(m_2, n, 3);
+  if m_1 == 0 or m_2 == 0 then
+    result = 0
+  else
+    sqrt(limit, n, _s, _i);
+    i = 5;
+    break = 0;
+    while i <= limit and break == 0 do
+      mod(m_1, n, i);
+      mod(m_2, n, i + 2);
+      if m_1 == 0 or m_2 == 0 then
+        result = 0;
+        break = 1
+      else skip fi;
+      i = i + 6
+    od
+  fi
+fi;
+
+is_prime_spec(spec, n, _m, _i);
+assert result == spec

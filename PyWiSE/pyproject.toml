@@ -1,0 +1,35 @@
+[build-system]
+requires = [
+    "setuptools>=42",
+    "setuptools-antlr",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wise-se"
+version = "0.0.6"
+authors = [
+    { name = "Arthur Correnson", email = "arthur.correnson@ens-rennes.fr" },
+    { name = "Dominic Steinhoefel", email = "dominic.steinhoefel@cispa.de" },
+]
+description = "A Python re-implementation of the proven-correct symbolic executor WiSE"
+readme = "README.md"
+license = { file = "COPYING" }
+requires-python = ">=3.10"
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Testing",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/acorrenson/WiSE"
+"Bug Tracker" = "https://github.com/acorrenson/WiSE/issues/"
+
+[tool.black]
+line-length = 88
+target-version = ['py310']

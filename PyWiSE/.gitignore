@@ -1,0 +1,7 @@
+.idea/
+venv/
+__pycache__
+build/
+src/wise.egg-info/
+dist/
+src/wise_se.egg-info/

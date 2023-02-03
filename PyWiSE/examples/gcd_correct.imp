@@ -1,0 +1,14 @@
+assert not a <= 0;
+assert not b <= 0;
+while not a == b do
+  old_a = a ;
+  old_b = b ;
+
+  if a <= b then
+    b = b - a
+  else
+    a = a - b
+  fi;
+
+  assert a >= 0 and b >= 0 and a < old_a or b < old_bc
+od

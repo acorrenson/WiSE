@@ -1,0 +1,33 @@
+macro square(s, r, i)
+begin
+  s = r;
+  i = 1;
+  while i < r do
+   s = s + r;
+   i = i + 1
+  od
+end
+
+assert x > 0;
+r = x;
+
+# Compute _s = r * r
+square(_s, r, r, _i);
+
+while _s > x do
+while _s < x do  # BUG: should be _s > x
+ r = r - 1;
+
+ # Compute _s = r * r
+ square(_s, r, r, _i)
+od;
+
+# SPECIFICATION
+
+# Compute _s_1 = r * r
+square(_s_1, r, r, _i);
+
+# Compute _s_2 = (r + 1) * (r + 1)
+square(_s_2, r + 1, r + 1, _i);
+
+assert _s_1 <= x and x <= _s_2
