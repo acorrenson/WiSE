@@ -330,7 +330,7 @@ Qed.
 
 Theorem run_finished_nil:
   forall l,
-    none (run l) -> l = [].
+    run l ⊨ none -> l = [].
 Proof.
   now intros [|[[path env] prog]].
 Qed.
@@ -438,43 +438,20 @@ Theorem relative_soundness:
   forall p,
     find_bugs p ⊨ □ ValidStatus p.
 Proof.
-  intros.
-  (* cleary a reformulation of find_bugs_sound *)
-Admitted.
+  intros p n.
+  pose proof (find_bugs_sound p n).
+  unfold ValidStatus, potential_bug, now, get in *.
+  destruct (shift) eqn:Heq.
+  destruct x as [ [[φ senv] p'] | | ]; auto.
+  intros [V p''] (V0 & HV0).
+  destruct H as [H2 H3].
+  split.
+  - apply symex.Reach_sound.
+    now exists V0, (φ, senv, p').
+  - destruct HV0 as  [_ [_ <-]].
+    now apply is_error_Stuck, is_error_correct.
+Qed.
 
-(** ** Main Correctness Theorem !!!! *)
-
-(** THE MAIN RESULT:
-    [find_bugs p] is correct !
-    This statement means 2 things:
-    (1) For any bug in the program [p], the bug is eventually going
-        to be discovered
-    (2) If a 'bugy path' is discovered, then any concrete
-        instance of this path is a bug
-*)
-(* Theorem find_bugs_correct:
-  forall env0 prog0 env1 prog1,
-    imp.bug (env0, prog0) (env1, prog1) <->
-    exists path2 env2 prog2,
-      simpath (env0, prog0) (env1, prog1) (path2, env2, prog2) /\
-      (◊ (bug_found (path2, env2, prog2))) (find_bugs prog0).
-Proof.
-  intros. split.
-  + intros (path2 & env2 & prog2 & [Hbug Hpath])%bug_bug.
-    do 3 eexists. split; eauto.
-    now apply find_bugs_sym_complete.
-  + intros (path2 & env2 & prog2 & [Hpath [n Hbug]]).
-    pose proof (H1 := find_bugs_sym_sound prog0 n).
-    pose proof (H2 := bug_found_bug_here _ _ Hbug).
-    specialize (H1 H2).
-    unfold bug_from, bug_found, now, here in *.
-    rewrite get_shift in *.
-    destruct get eqn:Heq; subst; try easy.
-    destruct Hpath as [H [-> ->]].
-    apply bug_bug.
-    do 3 eexists. split; eauto.
-    now repeat econstructor.
-Qed. *)
 
 (** "termination" of the bugfinding loop:
     If at any point in time [find_bugs p] emits
