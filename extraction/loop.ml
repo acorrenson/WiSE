@@ -388,16 +388,16 @@ type status =
 let then_do q = function
 | (p0, p) -> (p0, (Seq (p, q)))
 
-(** val exec_task : bexpr -> sym_store -> iMP -> sym_state list **)
+(** val expand : bexpr -> sym_store -> iMP -> sym_state list **)
 
-let rec exec_task path env = function
+let rec expand path env = function
 | Ite (b, p1, p2) ->
   (((Band (path, (sym_beval env b))), env), p1) :: ((((Band (path, (Bnot
     (sym_beval env b)))), env), p2) :: [])
 | Seq (p1, p2) ->
   (match p1 with
    | Skip -> ((path, env), p2) :: []
-   | _ -> map (then_do p2) (exec_task path env p1))
+   | _ -> map (then_do p2) (expand path env p1))
 | Aff (x, e) -> ((path, (sym_update env x (sym_aeval env e))), Skip) :: []
 | Loop (b, p) ->
   (((Band (path, (sym_beval env b))), env), (Seq (p, (Loop (b,
@@ -411,7 +411,7 @@ let rec run = function
 | s :: next ->
   let (p, prog) = s in
   let (path, env) = p in
-  let next_next = exec_task path env prog in
+  let next_next = expand path env prog in
   lazy (Scons ((Some ((path, env), prog)), (run (app next next_next))))
 
 (** val display : sym_state option -> status **)

@@ -126,7 +126,7 @@ type status =
 
 val then_do : iMP -> sym_state -> (bexpr * sym_store) * iMP
 
-val exec_task : bexpr -> sym_store -> iMP -> sym_state list
+val expand : bexpr -> sym_store -> iMP -> sym_state list
 
 val run : tasks -> sym_state option stream
 

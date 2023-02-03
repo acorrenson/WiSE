@@ -5,7 +5,7 @@ Import LTL.
 
 (** * Correctness proof of the bugfinder *)
 
-(** ** Soundness and Completness of [exec_task] w.r.t [sym_step] *)
+(** ** Soundness and Completness of [expand] w.r.t [sym_step] *)
 
 Lemma map_in:
   forall A B (f : A -> B) (l : list A) b,
@@ -18,10 +18,10 @@ Proof.
     exists a'. split; auto. now right.
 Qed.
 
-(** [exec_task] is a sound implementation of [sym_step] *)
-Theorem exec_task_sound:
+(** [expand] is a sound implementation of [sym_step] *)
+Theorem expand_sound:
   forall path env prog t,
-    In t (exec_task path env prog) -> sym_step ((path, env), prog) t.
+    In t (expand path env prog) -> sym_step ((path, env), prog) t.
 Proof.
   intros path env prog [[path' env'] prog'] Hin.
   induction prog in path', env', prog', Hin |-*; subst; try easy.
@@ -44,11 +44,11 @@ Proof.
   - destruct Hin as [[=<-<-<-] | [[=<-<-<-]| []]]; now constructor.
 Qed.
 
-(** [exec_task] is a complete implementation of [sym_step] *)
-Theorem exec_task_complete:
+(** [expand] is a complete implementation of [sym_step] *)
+Theorem expand_complete:
   forall path env prog t,
     sym_step ((path, env), prog) t ->
-    In t (exec_task path env prog).
+    In t (expand path env prog).
 Proof.
   intros * Ht.
   dependent induction Ht; intros; simpl.
@@ -63,12 +63,12 @@ Proof.
   - now (right; left).
 Qed.
 
-(** [exec_task] spawns 0, 1 or 2 tasks *)
-Theorem exec_task_inv:
+(** [expand] spawns 0, 1 or 2 tasks *)
+Theorem expand_inv:
   forall path env prog,
-    (exec_task path env prog = []) \/
-    (exists s, exec_task path env prog = [s]) \/
-    (exists s1 s2, exec_task path env prog = [s1; s2]).
+    (expand path env prog = []) \/
+    (exists s, expand path env prog = [s]) \/
+    (exists s1 s2, expand path env prog = [s1; s2]).
 Proof.
   intros. induction prog.
   - now left.
@@ -101,7 +101,7 @@ Qed.
 (** [run_eq] can be used to destruct applications of the cofixpoint [run] *)
 Theorem run_eq:
   forall l path env prog,
-    run ((path, env, prog)::l) = scons (Some (path, env, prog)) (run (l ++ exec_task path env prog)).
+    run ((path, env, prog)::l) = scons (Some (path, env, prog)) (run (l ++ expand path env prog)).
 Proof.
   intros. now rewrite <- force_id at 1.
 Qed.
@@ -145,7 +145,7 @@ Proof.
   intros. induction l1 as [|[[path env] prog] l1 IH] in l2 |-*.
   - simpl. exists []. now rewrite app_nil_r.
   - simpl. rewrite <- List.app_assoc.
-    specialize (IH (l2 ++ exec_task path env prog)) as [l3 Hl3].
+    specialize (IH (l2 ++ expand path env prog)) as [l3 Hl3].
     rewrite Hl3. rewrite <- List.app_assoc. now eexists.
 Qed.
 
@@ -155,12 +155,12 @@ Qed.
 Theorem run_n_S_length:
   forall l1 l2 path env prog,
     exists l3,
-      run_n (S (List.length l1)) ((path, env, prog)::l1 ++ l2) = l2 ++ (exec_task path env prog) ++ l3.
+      run_n (S (List.length l1)) ((path, env, prog)::l1 ++ l2) = l2 ++ (expand path env prog) ++ l3.
 Proof.
   intros. induction l1 as [|[[path1 env1] prog1] l1 IH] in l2, path, env, prog |-*.
   - simpl. exists []. now rewrite app_nil_r.
   - simpl. do 2 rewrite <- List.app_assoc. simpl in IH.
-    specialize (IH (l2 ++ exec_task path env prog) path1 env1 prog1).
+    specialize (IH (l2 ++ expand path env prog) path1 env1 prog1).
     simpl in IH. edestruct IH as [l3 Hl3]. eexists.
     repeat rewrite <- List.app_assoc in Hl3. apply Hl3.
 Qed.
@@ -239,11 +239,11 @@ Proof.
   - simpl in *. destruct l as [| [[path env] prog]]; try easy.
     repeat econstructor.
   - destruct l as [| [[path env] prog] l]; try easy.
-    specialize (IHn (l ++ exec_task path env prog)).
+    specialize (IHn (l ++ expand path env prog)).
     simpl. destruct run_n as [| [[path1 env1] prog1]] eqn:Heq; try easy.
     destruct IHn as [[[path2 env2] prog2] [[H | H]%in_app_iff Hsteps]].
     + eexists. split; eauto. now right.
-    + pose proof (exec_task_sound _ _ _ _ H).
+    + pose proof (expand_sound _ _ _ _ H).
       eexists. split. now left.
       econstructor; eauto.
 Qed.
@@ -262,8 +262,8 @@ Proof.
   intros * Hstep H.
   destruct l as [| [[path env] prog]]; try easy.
   cbn in H. subst.
-  apply exec_task_complete in Hstep.
-  destruct (exec_task_inv path env prog) as [Htask | [[s Htask] | (s1 & s2 & Htask)]].
+  apply expand_complete in Hstep.
+  destruct (expand_inv path env prog) as [Htask | [[s Htask] | (s1 & s2 & Htask)]].
   - now rewrite Htask in Hstep.
   - rewrite run_eq, Htask in *. inversion Hstep; subst; try easy.
     exists (S (List.length l)). simpl.

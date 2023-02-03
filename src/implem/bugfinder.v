@@ -17,7 +17,7 @@ Definition then_do q '(((path, env), p) : sym_state) :=
   ((path, env), Seq p q).
 
 (** Executing a task according to [sym_step] *)
-Fixpoint exec_task path env prog : list sym_state :=
+Fixpoint expand path env prog : list sym_state :=
   match prog with
   | Skip => []
   | Aff x e =>
@@ -35,7 +35,7 @@ Fixpoint exec_task path env prog : list sym_state :=
     ]
   | Seq Skip p2 => [(path, env, p2)]
   | Seq p1 p2 =>
-    List.map (then_do p2) (exec_task path env p1)
+    List.map (then_do p2) (expand path env p1)
   end.
 
 (** Bugfinding loop: at every iteration, a task is choosen and then executed.
@@ -49,7 +49,7 @@ CoFixpoint run (l : tasks) : stream (option sym_state) :=
   match l with
   | [] => scons None (run [])
   | ((path, env), prog)::next =>
-    let next_next := exec_task path env prog in
+    let next_next := expand path env prog in
     scons (Some (path, env, prog)) (run (next ++ next_next))
   end.
 
@@ -59,7 +59,7 @@ Fixpoint run_n (n : nat) (tasks : list sym_state) : list sym_state :=
   | 0, _ => tasks
   | S n, [] => []
   | S n, (path, env, prog)::next =>
-    let next_next := exec_task path env prog in
+    let next_next := expand path env prog in
     run_n n (next ++ next_next)
   end.
 
