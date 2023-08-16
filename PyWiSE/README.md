@@ -62,7 +62,7 @@ Either way, the `wise` command should now be available on your command line. You
 test it on the examples in the `examples/` directory, e.g.:
 
 ```shell
-$ wise examples/gcd_buggy.mp
+$ wise examples/gcd_buggy.imp
 Analyzing file examples/gcd_buggy.imp
 
 BUG FOUND
