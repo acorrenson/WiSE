@@ -90,4 +90,4 @@ Enter `wise -h` for a short help text on the available options.
 
 Copyright © 2023 Arthur Correnson and Dominic Steinhöfel.
 
-PyWiSE is released under the GNU General Public License v3.0 (see [COPYING](COPYING)).
+PyWiSE is released under the MIT License (see [COPYING](COPYING)).
