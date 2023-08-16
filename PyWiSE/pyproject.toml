@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wise-se"
-version = "0.0.6"
+version = "0.0.7"
 authors = [
     { name = "Arthur Correnson", email = "arthur.correnson@ens-rennes.fr" },
     { name = "Dominic Steinhoefel", email = "dominic.steinhoefel@cispa.de" },

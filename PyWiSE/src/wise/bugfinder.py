@@ -3,11 +3,11 @@
 Definition tasks := list (sym_state * IMP).
 """
 from dataclasses import dataclass
-from typing import List, Tuple, Optional
+from typing import List, Optional
 
 from toolz import curry
 
-from wise.helpers import is_unsat, simplify_expr, simplify_store
+from wise.helpers import is_unsat
 from wise.imp import (
     Imp,
     Seq,

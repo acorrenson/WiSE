@@ -7,7 +7,7 @@ from antlr4.error.Errors import ParseCancellationException
 import wise
 from wise.bugfinder import find_bugs, BugFound, find_bugs_depth_first, \
     find_bugs_assuming
-from wise.helpers import is_unsat, simplify_expr
+from wise.helpers import simplify_expr
 from wise.parser import parse_imp, parse_bexpr
 
 # Exit Codes
