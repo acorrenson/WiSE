@@ -1,0 +1,15 @@
+assume a > 0
+assume b > 0
+loop a != b {
+  olda = a
+  oldb = b
+
+  if a <= b {
+    b = b - a
+    
+  } else {
+    a = a + b
+  }
+
+  assert a >= 0 and b >= 0 and (a < olda or b < oldb)
+}
