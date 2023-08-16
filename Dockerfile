@@ -4,8 +4,11 @@ LABEL author="Dominic Steinhoefel"
 
 USER coq
 COPY --chown=coq:coq . /home/coq/WiSE/
+RUN sudo apt-get update
+RUN sudo apt-get install -y python2.7 python3-distutils 
+
 RUN opam init -y --shell-setup
-RUN opam install opal
+RUN opam install -y opal z3
 # RUN opam pin -y coq 8.13.2
 
 WORKDIR /home/coq/WiSE

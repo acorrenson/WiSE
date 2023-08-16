@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 echo "Cloning into https://github.com/acorrenson/WiSE.git"
-cd /tmp
+TMPDIR=$(mktemp -d)
+echo "Temporary directory: $TMPDIR"
+cd "$TMPDIR"
 git clone -q https://github.com/acorrenson/WiSE.git
 cd WiSE/
 
