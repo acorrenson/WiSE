@@ -10,7 +10,7 @@ from wise.imp import Bexpr, Ident, Aexpr, Var, Cst, Add, Sub, Bcst, Ble, Beq, Ba
     Bnot, Imp
 
 
-@dataclass
+@dataclass(frozen=True)
 class SymStore:
     """
     (** Symbolic stores are simply substitutions (of variable with expressions) *)
@@ -23,7 +23,7 @@ class SymStore:
         raise NotImplementedError()
 
 
-@dataclass
+@dataclass(frozen=True)
 class Id(SymStore):
     """
     Definition id : sym_store := fun x => Var x.
@@ -36,7 +36,7 @@ class Id(SymStore):
         return "{}"
 
 
-@dataclass
+@dataclass(frozen=True)
 class NonEmptySymStore(SymStore):
     var: Ident
     val: Aexpr
