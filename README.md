@@ -46,8 +46,8 @@ PyWiSE's IMP syntax precisely follows the definitions in the paper.
 The code for the GCD problem in the "official" (PyWiSE/paper) syntax is
 
 ```
-assert not a <= 0;
-assert not b <= 0;
+assert not a <= 0 ;
+assert not b <= 0 ;
 while not a == b do
   old_a = a ;
   old_b = b ;
@@ -56,7 +56,7 @@ while not a == b do
     b = b - a
   else
     a = a - b
-  fi;
+  fi ;
 
   assert a >= 0 and b >= 0 and a < old_a or b < old_b
 od
@@ -82,13 +82,143 @@ loop a != b {
 }
 ```
 
-The `assume` statements used in the Coq version are not presented in the paper nor implemented in PyWiSE.
+The `assume` statement type used in the Coq version is not presented in the paper nor implemented in PyWiSE.
 
+To analyze the GCD example with WiSE, run (from the project's main directory)
 
+```bash
+cd Coq/extraction/_build/default/
+./bugfinder.exe -i gcd_correct.imp
+```
+
+The expected output, assuming you press "N" or Enter to end the session after the respective prompt, is
+
+```
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[x] => Found bug (((((not (a <= 0)) and (not (b <= 0))) and (not (a = b))) and (a <= b)) and (((0 <= a) and (0 <= (b - a))) and (not ((a <= a) and (b <= (b - a))))))
+Do you want to continue [y/N]
+
+Ending the session
+```
+
+TODO @Arthur: No, there should be no bug :) What happens here?
+
+To analyze the example with PyWiSE, run (from the project's main directory)
+
+```bash
+cd PyWiSE/
+source venv/bin/activate
+cd examples/
+wise -a "a > 0 and b > 0" gcd_correct.imp
+```
+
+The `-a` flag allows to add an *assumption* on program inputs to be considered during symbolic execution.
+It replaces the `assume` statement type from the Coq version.
+A bug would be reported without those premises since the `assert` statements could fail.
+
+The expected output of this run is
+
+```
+Analyzing file gcd_correct.imp
+
+No bug found at depth 50.
+```
+
+To assert that our prototypes *can* find bugs if there are any, we created an intentionally "buggy" version of GCD:
+
+```
+assert not a <= 0 ;
+assert not b <= 0 ;
+while not a == b do
+  old_a = a ;
+  old_b = b ;
+
+  if a <= b then
+    b = b - a
+  else
+    a = a + b  # should be a - b
+  fi ;
+
+  assert a >= 0 and b >= 0 and a < old_a or b < old_b
+od
+```
+
+To analyze the *buggy* GCD example with WiSE, run (from the project's main directory)
+
+```bash
+cd Coq/extraction/_build/default/
+./bugfinder.exe -i gcd_buggy.imp
+```
+
+The expected output, assuming you press "N" or Enter to end the session after the respective prompt, is
+
+```
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[o] => Pending
+[x] => Found bug (((((not (a <= 0)) and (not (b <= 0))) and (not (a = b))) and (a <= b)) and (((0 <= a) and (0 <= (b - a))) and (not ((a <= a) and (b <= (b - a))))))
+Do you want to continue [y/N]
+
+Ending the session
+```
+
+To analyze the example with PyWiSE, run (from the project's main directory)
+
+```bash
+cd PyWiSE/
+source venv/bin/activate
+cd examples/
+wise -a "a > 0 and b > 0" gcd_buggy.imp
+```
+
+The expected output of this run is
+
+```
+Analyzing file gcd_buggy.imp
+
+BUG FOUND
+  Path:          0 <= a and not (0 == a) and 0 <= b and not (0 == b) and not (a <= 0) and not (b <= 0) and not (a == b) and not (a <= b) and not (0 <= (a + b) and 0 <= b and b <= 0 and not (b == 0))
+  Example Input: a := 2, b := 1
+  Store:         {}{old_a -> a}{old_b -> b}{a -> (a + b)}
+BUG FOUND
+  Path:          0 <= a and not (a == 0) and 0 <= b and not (b == 0) and not (a <= 0) and not (b <= 0) and not (a == b) and a <= b and not (not (0 <= a and 0 <= (b - a) and a <= a and not (a == a)) and not ((b - a) <= b and not ((b - a) == b))) and not (a == (b - a)) and not (a <= (b - a)) and not (not (not (0 <= (a + (b - a)) and 0 <= (b - a) and (a + (b - a)) <= a and not ((a + (b - a)) == a)) and not ((b - a) <= (b - a) and not ((b - a) == (b - a)))))
+  Example Input: a := 2, b := 3
+  Store:         {}{old_a -> a}{old_b -> b}{b -> (b - a)}{old_a -> a}{old_b -> (b - a)}{a -> (a + (b - a))}
+BUG FOUND
+  Path:          0 <= a and not (a == 0) and 0 <= b and not (b == 0) and not (a <= 0) and not (b <= 0) and not (a == b) and a <= b and not (not (0 <= a and 0 <= (b - a) and a <= a and not (a == a)) and not ((b - a) <= b and not ((b - a) == b))) and not (a == (b - a)) and a <= (b - a) and not (not (0 <= a and 0 <= ((b - a) - a) and a <= a and not (a == a)) and not (((b - a) - a) <= (b - a) and not (((b - a) - a) == (b - a)))) and not (a == ((b - a) - a)) and not (a <= ((b - a) - a)) and not (not (not (0 <= (a + ((b - a) - a)) and 0 <= ((b - a) - a) and (a + ((b - a) - a)) <= a and not ((a + ((b - a) - a)) == a)) and not (((b - a) - a) <= ((b - a) - a) and not (((b - a) - a) == ((b - a) - a)))))
+  Example Input: a := 2, b := 5
+  Store:         {}{old_a -> a}{old_b -> b}{b -> (b - a)}{old_a -> a}{old_b -> (b - a)}{b -> ((b - a) - a)}{old_a -> a}{old_b -> ((b - a) - a)}{a -> (a + ((b - a) - a))}
+```
 
 ### Factorial
 
 ### Integer Square Root
+
+## Using our Docker Container
+
+TODO
 
 ## License
 
