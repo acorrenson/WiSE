@@ -23,7 +23,6 @@ RUN sudo rm -rf /tmp/Python-3.10.12
 # Opam dependencies
 RUN opam init -y --shell-setup
 RUN opam install -y opal z3
-# RUN opam pin -y coq 8.13.2
 
 # Build WiSE (Coq and OCaml)
 WORKDIR /home/coq/WiSE
@@ -36,9 +35,7 @@ WORKDIR ..
 # Build PyWiSE
 WORKDIR PyWiSE
 RUN python3.10 -m venv venv
-RUN source venv/bin/activate
-RUN pip install -e .[dev,test]
-RUN deactivate
+RUN source venv/bin/activate && pip install -e .[dev,test] && deactivate
 WORKDIR ..
 
 CMD ["bash"]
