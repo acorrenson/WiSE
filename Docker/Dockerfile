@@ -4,7 +4,7 @@ LABEL author="Dominic Steinhoefel"
 
 # Basics
 USER coq
-COPY --chown=coq:coq . /home/coq/WiSE/
+COPY --chown=coq:coq .. /home/coq/WiSE/
 RUN sudo apt-get update
 RUN sudo apt-get install -y python2.7 python3-distutils python3-venv
 
@@ -24,13 +24,16 @@ RUN sudo rm -rf /tmp/Python-3.10.12
 RUN opam init -y --shell-setup
 RUN opam install -y opal z3
 
-# Build WiSE (Coq and OCaml)
 WORKDIR /home/coq/WiSE
+
+# Build WiSE (Coq and OCaml)
+WORKDIR Coq
 RUN make
 
 WORKDIR extraction
 RUN dune build
-WORKDIR ..
+
+WORKDIR /home/coq/WiSE
 
 # Build PyWiSE
 WORKDIR PyWiSE

@@ -8,7 +8,7 @@ git clone -q https://github.com/acorrenson/WiSE.git
 cd WiSE/
 
 echo "Building Docker image"
-vhash=$(docker build -q -t dsteinhoefel/wise .)
+vhash=$(docker build -f Docker/Dockerfile -t dsteinhoefel/wise .)
 
 echo "Tagging image with hash $vhash to dsteinhoefel/wise:latest"
 docker tag "$vhash" dsteinhoefel/wise:latest
