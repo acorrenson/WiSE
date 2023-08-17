@@ -92,29 +92,8 @@ cd Coq/extraction/_build/default/
 ./bugfinder.exe -i gcd_correct.imp
 ```
 
-The expected output, assuming you press "N" or Enter to end the session after the respective prompt, is
-
-```
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[o] => Pending
-[x] => Found bug (((((not (a <= 0)) and (not (b <= 0))) and (not (a = b))) and (a <= b)) and (((0 <= a) and (0 <= (b - a))) and (not ((a <= a) and (b <= (b - a))))))
-Do you want to continue [y/N]
-
-Ending the session
-```
-
-TODO @Arthur: No, there should be no bug :) What happens here?
+You must press Ctrl+C to terminate the execution.
+The console will show many "Potential bug (CLEARED)" messages, which means that a path to a failed `assert` statement has been discovered but found to be infeasible.
 
 To analyze the example with PyWiSE, run (from the project's main directory)
 
@@ -136,6 +115,10 @@ Analyzing file gcd_correct.imp
 
 No bug found at depth 50.
 ```
+
+In contrast to WiSE, PyWiSE contains a depth limit to ensure termination.
+Thus, you do not have to interrupt the search manually if no bug was discovered.
+The command-line interface of PyWiSE offers an `-n` parameter to change the depth limit (we use this parameter in the [integer square root example](#integer-square-root)).
 
 To assert that our prototypes *can* find bugs if there are any, we created an intentionally "buggy" version of GCD:
 
@@ -356,7 +339,19 @@ BUG FOUND
 
 ## Using our Docker Container
 
-TODO
+Our Docker container contains the complete infrastructure for running (Py)WiSE (Coq, Python 3.10, Z3, etc.).
+Furthermore, WiSE and PyWiSE are pre-built in the image.
+Thus, you can start experimenting with our tools and examples without interruptions!
+
+To retrieve and start the docker container, you need a working Docker installation, and the Docker daemon must be running.
+Then, type in a terminal
+
+```bash
+docker pull dsteinhoefel/wise
+docker run -it --name wise dsteinhoefel/wise
+```
+
+Afterward, you should see the bash prompt of the Docker container and should be able to follow the instructions for [running the examples](#running-the-examples-from-the-paper).
 
 ## License
 
