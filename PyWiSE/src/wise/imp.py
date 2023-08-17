@@ -1,13 +1,14 @@
 from abc import abstractmethod
 from dataclasses import dataclass
 
-##############
-### Syntax ###
-##############
 import sympy
 import z3
 from sympy import Symbol
 from sympy.logic.boolalg import BooleanTrue, BooleanFalse, Boolean
+
+##############
+### Syntax ###
+##############
 
 """
 Definition ident := string.
@@ -47,7 +48,7 @@ class Var(Aexpr):
         return z3.Int(self.ident)
 
     def to_sym(self) -> sympy.Expr:
-        return Symbol(self.ident)
+        return Symbol(self.ident, integer=True)
 
 
 @dataclass(frozen=True)
@@ -77,7 +78,7 @@ class Add(Aexpr):
         return self.left.to_smt() + self.right.to_smt()
 
     def to_sym(self) -> sympy.Expr:
-        return self.left.to_sym() + self.right.to_sym()
+        return sympy.Add(self.left.to_sym(), self.right.to_sym())
 
 
 @dataclass(frozen=True)
@@ -92,7 +93,9 @@ class Sub(Aexpr):
         return self.left.to_smt() - self.right.to_smt()
 
     def to_sym(self) -> sympy.Expr:
-        return self.left.to_sym() - self.right.to_sym()
+        return sympy.Add(
+            self.left.to_sym(), sympy.Mul(sympy.Integer(-1), self.right.to_sym())
+        )
 
 
 """
@@ -142,7 +145,7 @@ class Ble(Bexpr):
         return self.left.to_smt() <= self.right.to_smt()
 
     def to_sym(self) -> Boolean:
-        return self.left.to_sym() <= self.right.to_sym()
+        return sympy.Le(self.left.to_sym(), self.right.to_sym())
 
 
 @dataclass(frozen=True)
@@ -157,7 +160,7 @@ class Beq(Bexpr):
         return self.left.to_smt() == self.right.to_smt()
 
     def to_sym(self) -> Boolean:
-        return self.left.to_sym() == self.right.to_sym()
+        return sympy.Eq(self.left.to_sym(), self.right.to_sym())
 
 
 @dataclass(frozen=True)
