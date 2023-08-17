@@ -33,6 +33,15 @@ def simplify_sympy(expr: S) -> sympy.Expr | Boolean:
     return expr.to_sym().simplify()
 
 
+def simplify_store(store: SymStore) -> SymStore:
+    if isinstance(store, Id):
+        return store
+    assert isinstance(store, NonEmptySymStore)
+    return NonEmptySymStore(
+        store.var, simplify_expr(store.val), simplify_store(store.s)
+    )
+
+
 def simplify_store_sympy(store: SymStore) -> SymStore:
     if isinstance(store, Id):
         return store
