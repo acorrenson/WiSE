@@ -8,7 +8,7 @@ from wise.bugfinder import (
     find_bugs_assuming,
     Finished,
 )
-from wise.helpers import is_unsat, simplify_expr, simplify_store
+from wise.helpers import is_unsat, simplify_expr, simplify_store_sympy
 from wise.imp import *
 from wise.parser import parse_imp, parse_bexpr
 from wise.streams import peek
@@ -279,7 +279,7 @@ class TestBugfinder(unittest.TestCase):
         self.assertTrue(
             any(
                 simplify_expr(bug.s[0]) == simplified_bug_path
-                and simplify_store(bug.s[1]) == simplified_store
+                and simplify_store_sympy(bug.s[1]) == simplified_store
                 for bug in bugs
             )
         )

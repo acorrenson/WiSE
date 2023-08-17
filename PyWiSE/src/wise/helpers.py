@@ -1,5 +1,8 @@
 import functools
+from functools import reduce
 from typing import Optional, cast, TypeVar, Callable
+
+import sympy
 
 from wise.imp import *
 from wise.symex import SymStore, Id, NonEmptySymStore
@@ -26,12 +29,16 @@ def simplify_expr(expr: S) -> S:
     return expr if result is None else result
 
 
-def simplify_store(store: SymStore) -> SymStore:
+def simplify_sympy(expr: S) -> sympy.Expr | Boolean:
+    return expr.to_sym().simplify()
+
+
+def simplify_store_sympy(store: SymStore) -> SymStore:
     if isinstance(store, Id):
         return store
     assert isinstance(store, NonEmptySymStore)
     return NonEmptySymStore(
-        store.var, simplify_expr(store.val), simplify_store(store.s)
+        store.var, simplify_sympy(store.val), simplify_store_sympy(store.s)
     )
 
 
