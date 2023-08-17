@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<link href="coqdocjs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="config.js"></script>
+<script type="text/javascript" src="coqdocjs.js"></script>
+</head>
+
+<body onload="document.getElementById('content').focus()">
+  <div id="header">
+    <span class="left">
+      <span class="modulename"> <script> document.write(document.title) </script> </span>
+    </span>
+
+    <span class="button" id="toggle-proofs"></span>
+
+    <span class="right">
+      <a href="../">Project Page</a>
+      <a href="./indexpage.html"> Index </a>
+      <a href="./toc.html"> Table of Contents </a>
+    </span>
+</div>
+    <div id="content" tabindex="-1" onblur="document.getElementById('content').focus()">
+    <div id="main">
+<h1 class="libtitle">WiSE.lang.imprec</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.ZArith.ZArith.html#"><span class="id" title="library">ZArith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Strings.String.html#"><span class="id" title="library">String</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Program.Equality.html#"><span class="id" title="library">Program.Equality</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">WiSE</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="WiSE.relations.html#"><span class="id" title="library">relations</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab11"></a><h1 class="section">IMPREC, An extension of IMP with procedures and recursion</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab12"></a><h2 class="section">Syntax</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="ident" class="idref" href="#ident"><span class="id" title="definition">ident</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Strings.String.html#string"><span class="id" title="inductive">string</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="variable" class="idref" href="#variable"><span class="id" title="inductive">variable</span></a> :=<br/>
+&nbsp;&nbsp;| <a id="Local" class="idref" href="#Local"><span class="id" title="constructor">Local</span></a> (<a id="x:3" class="idref" href="#x:3"><span class="id" title="binder">x</span></a> : <a class="idref" href="WiSE.lang.imprec.html#ident"><span class="id" title="definition">ident</span></a>)<br/>
+&nbsp;&nbsp;| <a id="Global" class="idref" href="#Global"><span class="id" title="constructor">Global</span></a> (<a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a> : <a class="idref" href="WiSE.lang.imprec.html#ident"><span class="id" title="definition">ident</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Expressions 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="aexpr" class="idref" href="#aexpr"><span class="id" title="inductive">aexpr</span></a> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <a id="Var" class="idref" href="#Var"><span class="id" title="constructor">Var</span></a> : <a class="idref" href="WiSE.lang.imprec.html#variable"><span class="id" title="inductive">variable</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr:5"><span class="id" title="inductive">aexpr</span></a><br/>
+&nbsp;&nbsp;| <a id="Cst" class="idref" href="#Cst"><span class="id" title="constructor">Cst</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr:5"><span class="id" title="inductive">aexpr</span></a><br/>
+&nbsp;&nbsp;| <a id="Add" class="idref" href="#Add"><span class="id" title="constructor">Add</span></a> : <a class="idref" href="WiSE.lang.imprec.html#aexpr:5"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr:5"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr:5"><span class="id" title="inductive">aexpr</span></a><br/>
+&nbsp;&nbsp;| <a id="Sub" class="idref" href="#Sub"><span class="id" title="constructor">Sub</span></a> : <a class="idref" href="WiSE.lang.imprec.html#aexpr:5"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr:5"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr:5"><span class="id" title="inductive">aexpr</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="bexpr" class="idref" href="#bexpr"><span class="id" title="inductive">bexpr</span></a> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <a id="Bcst" class="idref" href="#Bcst"><span class="id" title="constructor">Bcst</span></a>  : <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#bexpr:7"><span class="id" title="inductive">bexpr</span></a><br/>
+&nbsp;&nbsp;| <a id="Ble" class="idref" href="#Ble"><span class="id" title="constructor">Ble</span></a>   : <a class="idref" href="WiSE.lang.imprec.html#aexpr"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#bexpr:7"><span class="id" title="inductive">bexpr</span></a><br/>
+&nbsp;&nbsp;| <a id="Beq" class="idref" href="#Beq"><span class="id" title="constructor">Beq</span></a>   : <a class="idref" href="WiSE.lang.imprec.html#aexpr"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#bexpr:7"><span class="id" title="inductive">bexpr</span></a><br/>
+&nbsp;&nbsp;| <a id="Bnot" class="idref" href="#Bnot"><span class="id" title="constructor">Bnot</span></a>  : <a class="idref" href="WiSE.lang.imprec.html#bexpr:7"><span class="id" title="inductive">bexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#bexpr:7"><span class="id" title="inductive">bexpr</span></a> <br/>
+&nbsp;&nbsp;| <a id="Band" class="idref" href="#Band"><span class="id" title="constructor">Band</span></a>  : <a class="idref" href="WiSE.lang.imprec.html#bexpr:7"><span class="id" title="inductive">bexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#bexpr:7"><span class="id" title="inductive">bexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#bexpr:7"><span class="id" title="inductive">bexpr</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Bor" class="idref" href="#Bor"><span class="id" title="definition">Bor</span></a> (<a id="b1:9" class="idref" href="#b1:9"><span class="id" title="binder">b1</span></a> <a id="b2:10" class="idref" href="#b2:10"><span class="id" title="binder">b2</span></a> : <a class="idref" href="WiSE.lang.imprec.html#bexpr"><span class="id" title="inductive">bexpr</span></a>) := <a class="idref" href="WiSE.lang.imprec.html#Band"><span class="id" title="constructor">Band</span></a> (<a class="idref" href="WiSE.lang.imprec.html#Bnot"><span class="id" title="constructor">Bnot</span></a> <a class="idref" href="WiSE.lang.imprec.html#b1:9"><span class="id" title="variable">b1</span></a>) (<a class="idref" href="WiSE.lang.imprec.html#Bnot"><span class="id" title="constructor">Bnot</span></a> <a class="idref" href="WiSE.lang.imprec.html#b2:10"><span class="id" title="variable">b2</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Commands 
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <a id="stmt" class="idref" href="#stmt"><span class="id" title="inductive">stmt</span></a> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <a id="Skip" class="idref" href="#Skip"><span class="id" title="constructor">Skip</span></a>  : <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a><br/>
+&nbsp;&nbsp;| <a id="Ite" class="idref" href="#Ite"><span class="id" title="constructor">Ite</span></a>   : <a class="idref" href="WiSE.lang.imprec.html#bexpr"><span class="id" title="inductive">bexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a><br/>
+&nbsp;&nbsp;| <a id="Seq" class="idref" href="#Seq"><span class="id" title="constructor">Seq</span></a>   : <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a><br/>
+&nbsp;&nbsp;| <a id="Aff" class="idref" href="#Aff"><span class="id" title="constructor">Aff</span></a>   : <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Strings.String.html#string"><span class="id" title="inductive">string</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#aexpr"><span class="id" title="inductive">aexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a><br/>
+&nbsp;&nbsp;| <a id="Err" class="idref" href="#Err"><span class="id" title="constructor">Err</span></a>   : <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a><br/>
+&nbsp;&nbsp;| <a id="Loop" class="idref" href="#Loop"><span class="id" title="constructor">Loop</span></a>  : <a class="idref" href="WiSE.lang.imprec.html#bexpr"><span class="id" title="inductive">bexpr</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="WiSE.lang.imprec.html#stmt:11"><span class="id" title="inductive">stmt</span></a><br/>
+&nbsp;&nbsp;.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Assert" class="idref" href="#Assert"><span class="id" title="definition">Assert</span></a> <a id="c:13" class="idref" href="#c:13"><span class="id" title="binder">c</span></a> := <a class="idref" href="WiSE.lang.imprec.html#Ite"><span class="id" title="constructor">Ite</span></a> <a class="idref" href="WiSE.lang.imprec.html#c:13"><span class="id" title="variable">c</span></a> <a class="idref" href="WiSE.lang.imprec.html#Skip"><span class="id" title="constructor">Skip</span></a> <a class="idref" href="WiSE.lang.imprec.html#Err"><span class="id" title="constructor">Err</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="alocals" class="idref" href="#alocals"><span class="id" title="definition">alocals</span></a> (<a id="e:14" class="idref" href="#e:14"><span class="id" title="binder">e</span></a> : <a class="idref" href="WiSE.lang.imprec.html#aexpr"><span class="id" title="inductive">aexpr</span></a>) (<a id="x:15" class="idref" href="#x:15"><span class="id" title="binder">x</span></a> : <a class="idref" href="WiSE.lang.imprec.html#ident"><span class="id" title="definition">ident</span></a>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="WiSE.lang.imprec.html#e:14"><span class="id" title="variable">e</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Var"><span class="id" title="constructor">Var</span></a> (<a class="idref" href="WiSE.lang.imprec.html#Local"><span class="id" title="constructor">Local</span></a> <span class="id" title="var">y</span>) =&gt; <span class="id" title="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="WiSE.lang.imprec.html#x:15"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Var"><span class="id" title="constructor">Var</span></a> (<a class="idref" href="WiSE.lang.imprec.html#Global"><span class="id" title="constructor">Global</span></a> <span class="id" title="var">_</span>) | <a class="idref" href="WiSE.lang.imprec.html#Cst"><span class="id" title="constructor">Cst</span></a> <span class="id" title="var">_</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Add"><span class="id" title="constructor">Add</span></a> <span class="id" title="var">e1</span> <span class="id" title="var">e2</span> | <a class="idref" href="WiSE.lang.imprec.html#Sub"><span class="id" title="constructor">Sub</span></a> <span class="id" title="var">e1</span> <span class="id" title="var">e2</span> =&gt; <a class="idref" href="WiSE.lang.imprec.html#alocals:16"><span class="id" title="definition">alocals</span></a> <span class="id" title="var">e1</span> <a class="idref" href="WiSE.lang.imprec.html#x:15"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">\/</span></a> <a class="idref" href="WiSE.lang.imprec.html#alocals:16"><span class="id" title="definition">alocals</span></a> <span class="id" title="var">e2</span> <a class="idref" href="WiSE.lang.imprec.html#x:15"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="blocals" class="idref" href="#blocals"><span class="id" title="definition">blocals</span></a> (<a id="b:18" class="idref" href="#b:18"><span class="id" title="binder">b</span></a> : <a class="idref" href="WiSE.lang.imprec.html#bexpr"><span class="id" title="inductive">bexpr</span></a>) (<a id="x:19" class="idref" href="#x:19"><span class="id" title="binder">x</span></a> : <a class="idref" href="WiSE.lang.imprec.html#ident"><span class="id" title="definition">ident</span></a>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="WiSE.lang.imprec.html#b:18"><span class="id" title="variable">b</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Bcst"><span class="id" title="constructor">Bcst</span></a> <span class="id" title="var">_</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Bnot"><span class="id" title="constructor">Bnot</span></a> <span class="id" title="var">b</span> =&gt; <a class="idref" href="WiSE.lang.imprec.html#blocals:20"><span class="id" title="definition">blocals</span></a> <a class="idref" href="WiSE.lang.imprec.html#b:18"><span class="id" title="variable">b</span></a> <a class="idref" href="WiSE.lang.imprec.html#x:19"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Ble"><span class="id" title="constructor">Ble</span></a> <span class="id" title="var">e1</span> <span class="id" title="var">e2</span> | <a class="idref" href="WiSE.lang.imprec.html#Beq"><span class="id" title="constructor">Beq</span></a> <span class="id" title="var">e1</span> <span class="id" title="var">e2</span> =&gt; <a class="idref" href="WiSE.lang.imprec.html#alocals"><span class="id" title="definition">alocals</span></a> <span class="id" title="var">e1</span> <a class="idref" href="WiSE.lang.imprec.html#x:19"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">\/</span></a> <a class="idref" href="WiSE.lang.imprec.html#alocals"><span class="id" title="definition">alocals</span></a> <span class="id" title="var">e2</span> <a class="idref" href="WiSE.lang.imprec.html#x:19"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Band"><span class="id" title="constructor">Band</span></a> <span class="id" title="var">b1</span> <span class="id" title="var">b2</span> =&gt;  <a class="idref" href="WiSE.lang.imprec.html#blocals:20"><span class="id" title="definition">blocals</span></a> <span class="id" title="var">b1</span> <a class="idref" href="WiSE.lang.imprec.html#x:19"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">\/</span></a> <a class="idref" href="WiSE.lang.imprec.html#blocals:20"><span class="id" title="definition">blocals</span></a> <span class="id" title="var">b2</span> <a class="idref" href="WiSE.lang.imprec.html#x:19"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="locals" class="idref" href="#locals"><span class="id" title="definition">locals</span></a> (<a id="s:22" class="idref" href="#s:22"><span class="id" title="binder">s</span></a> : <a class="idref" href="WiSE.lang.imprec.html#stmt"><span class="id" title="inductive">stmt</span></a>) (<a id="x:23" class="idref" href="#x:23"><span class="id" title="binder">x</span></a> : <a class="idref" href="WiSE.lang.imprec.html#ident"><span class="id" title="definition">ident</span></a>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="WiSE.lang.imprec.html#s:22"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Skip"><span class="id" title="constructor">Skip</span></a> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Ite"><span class="id" title="constructor">Ite</span></a> <span class="id" title="var">b</span> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> =&gt; <a class="idref" href="WiSE.lang.imprec.html#blocals"><span class="id" title="definition">blocals</span></a> <span class="id" title="var">b</span> <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">\/</span></a> <a class="idref" href="WiSE.lang.imprec.html#locals:24"><span class="id" title="definition">locals</span></a> <span class="id" title="var">s1</span> <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">\/</span></a> <a class="idref" href="WiSE.lang.imprec.html#locals:24"><span class="id" title="definition">locals</span></a> <span class="id" title="var">s2</span> <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Seq"><span class="id" title="constructor">Seq</span></a> <span class="id" title="var">s1</span> <span class="id" title="var">s2</span> =&gt;  <a class="idref" href="WiSE.lang.imprec.html#locals:24"><span class="id" title="definition">locals</span></a> <span class="id" title="var">s1</span> <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">\/</span></a> <a class="idref" href="WiSE.lang.imprec.html#locals:24"><span class="id" title="definition">locals</span></a> <span class="id" title="var">s2</span> <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Aff"><span class="id" title="constructor">Aff</span></a> <span class="id" title="var">y</span> <span class="id" title="var">e</span> =&gt; <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="var">y</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">\/</span></a> <a class="idref" href="WiSE.lang.imprec.html#alocals"><span class="id" title="definition">alocals</span></a> <span class="id" title="var">e</span> <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Err"><span class="id" title="constructor">Err</span></a> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Loop"><span class="id" title="constructor">Loop</span></a> <span class="id" title="var">b</span> <span class="id" title="var">s</span> =&gt; <a class="idref" href="WiSE.lang.imprec.html#blocals"><span class="id" title="definition">blocals</span></a> <span class="id" title="var">b</span> <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">\/</span></a> <a class="idref" href="WiSE.lang.imprec.html#locals:24"><span class="id" title="definition">locals</span></a> <a class="idref" href="WiSE.lang.imprec.html#s:22"><span class="id" title="variable">s</span></a> <a class="idref" href="WiSE.lang.imprec.html#x:23"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="declaration" class="idref" href="#declaration"><span class="id" title="record">declaration</span></a> := {<br/>
+&nbsp;&nbsp;<a id="params" class="idref" href="#params"><span class="id" title="projection">params</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="WiSE.lang.imprec.html#ident"><span class="id" title="definition">ident</span></a>;<br/>
+&nbsp;&nbsp;<a id="body" class="idref" href="#body"><span class="id" title="projection">body</span></a> : <a class="idref" href="WiSE.lang.imprec.html#stmt"><span class="id" title="inductive">stmt</span></a>;<br/>
+&nbsp;&nbsp;<a id="Hlocals" class="idref" href="#Hlocals"><span class="id" title="projection">Hlocals</span></a> : <span class="id" title="keyword">forall</span> <a id="x:29" class="idref" href="#x:29"><span class="id" title="binder">x</span></a>, <a class="idref" href="WiSE.lang.imprec.html#locals"><span class="id" title="definition">locals</span></a> <a class="idref" href="WiSE.lang.imprec.html#body:28"><span class="id" title="method">body</span></a> <a class="idref" href="WiSE.lang.imprec.html#x:29"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Lists.List.html#In"><span class="id" title="definition">List.In</span></a> <a class="idref" href="WiSE.lang.imprec.html#x:29"><span class="id" title="variable">x</span></a> <a class="idref" href="WiSE.lang.imprec.html#params:27"><span class="id" title="method">params</span></a><br/>
+}.<br/>
+
+<br/>
+<span class="id" title="keyword">Record</span> <a id="IMPREC" class="idref" href="#IMPREC"><span class="id" title="record">IMPREC</span></a> := {<br/>
+&nbsp;&nbsp;<a id="decls" class="idref" href="#decls"><span class="id" title="projection">decls</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="WiSE.lang.imprec.html#declaration"><span class="id" title="record">declaration</span></a>;<br/>
+&nbsp;&nbsp;<a id="main" class="idref" href="#main"><span class="id" title="projection">main</span></a>  : <a class="idref" href="WiSE.lang.imprec.html#stmt"><span class="id" title="inductive">stmt</span></a>;<br/>
+}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+NOTE :
+    Option 1 : assume programs are well formed
+<ul class="doclist">
+<li> No undefined local variables
+
+</li>
+<li> No references to undefined procedures
+
+</li>
+</ul>
+    Option 2 : Semantics fail if undefined variable....
+
+<div class="paragraph"> </div>
+
+    Opinion :
+<ul class="doclist">
+<li> option1 is an approach that works well for static languages
+
+</li>
+<li> option2 models more dynamic languages (python, js)
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+<a id="lab13"></a><h2 class="section">Semantics</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="global_store" class="idref" href="#global_store"><span class="id" title="definition">global_store</span></a> := <a class="idref" href="WiSE.lang.imprec.html#ident"><span class="id" title="definition">ident</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="local_store" class="idref" href="#local_store"><span class="id" title="definition">local_store</span></a> := <a class="idref" href="WiSE.lang.imprec.html#ident"><span class="id" title="definition">ident</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">-&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab14"></a><h3 class="section">Denotational semantics for expressions</h3>
+
+<div class="paragraph"> </div>
+
+ Semantics of Arithmetic expressions 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="aeval" class="idref" href="#aeval"><span class="id" title="definition">aeval</span></a> (<a id="gs:34" class="idref" href="#gs:34"><span class="id" title="binder">gs</span></a> : <a class="idref" href="WiSE.lang.imprec.html#global_store"><span class="id" title="definition">global_store</span></a>) (<a id="ls:35" class="idref" href="#ls:35"><span class="id" title="binder">ls</span></a> : <a class="idref" href="WiSE.lang.imprec.html#local_store"><span class="id" title="definition">local_store</span></a>) (<a id="e:36" class="idref" href="#e:36"><span class="id" title="binder">e</span></a> : <a class="idref" href="WiSE.lang.imprec.html#aexpr"><span class="id" title="inductive">aexpr</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="WiSE.lang.imprec.html#e:36"><span class="id" title="variable">e</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Var"><span class="id" title="constructor">Var</span></a> (<a class="idref" href="WiSE.lang.imprec.html#Global"><span class="id" title="constructor">Global</span></a> <span class="id" title="var">x</span>) =&gt; <a class="idref" href="WiSE.lang.imprec.html#gs:34"><span class="id" title="variable">gs</span></a> <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Var"><span class="id" title="constructor">Var</span></a> (<a class="idref" href="WiSE.lang.imprec.html#Local"><span class="id" title="constructor">Local</span></a> <span class="id" title="var">x</span>) =&gt; <a class="idref" href="WiSE.lang.imprec.html#ls:35"><span class="id" title="variable">ls</span></a> <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Cst"><span class="id" title="constructor">Cst</span></a> <span class="id" title="var">c</span> =&gt; <span class="id" title="var">c</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Add"><span class="id" title="constructor">Add</span></a> <span class="id" title="var">e1</span> <span class="id" title="var">e2</span> =&gt; <a class="idref" href="WiSE.lang.imprec.html#aeval:37"><span class="id" title="definition">aeval</span></a> <a class="idref" href="WiSE.lang.imprec.html#gs:34"><span class="id" title="variable">gs</span></a> <a class="idref" href="WiSE.lang.imprec.html#ls:35"><span class="id" title="variable">ls</span></a> <span class="id" title="var">e1</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.ZArith.BinInt.html#46584eddd5fdb16176a10a2843177d3a"><span class="id" title="notation">+</span></a> <a class="idref" href="WiSE.lang.imprec.html#aeval:37"><span class="id" title="definition">aeval</span></a> <a class="idref" href="WiSE.lang.imprec.html#gs:34"><span class="id" title="variable">gs</span></a> <a class="idref" href="WiSE.lang.imprec.html#ls:35"><span class="id" title="variable">ls</span></a> <span class="id" title="var">e2</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="WiSE.lang.imprec.html#Sub"><span class="id" title="constructor">Sub</span></a> <span class="id" title="var">e1</span> <span class="id" title="var">e2</span> =&gt; <a class="idref" href="WiSE.lang.imprec.html#aeval:37"><span class="id" title="definition">aeval</span></a> <a class="idref" href="WiSE.lang.imprec.html#gs:34"><span class="id" title="variable">gs</span></a> <a class="idref" href="WiSE.lang.imprec.html#ls:35"><span class="id" title="variable">ls</span></a> <span class="id" title="var">e1</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.16.1/stdlib//Coq.ZArith.BinInt.html#::Z_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="WiSE.lang.imprec.html#aeval:37"><span class="id" title="definition">aeval</span></a> <a class="idref" href="WiSE.lang.imprec.html#gs:34"><span class="id" title="variable">gs</span></a> <a class="idref" href="WiSE.lang.imprec.html#ls:35"><span class="id" title="variable">ls</span></a> <span class="id" title="var">e2</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="comment">(*&nbsp;Fixpoint&nbsp;asubst&nbsp;(e&nbsp;:&nbsp;aexpr)&nbsp;(x&nbsp;:&nbsp;ident)&nbsp;(e'&nbsp;:&nbsp;aexpr)&nbsp;:=<br/>
+&nbsp;&nbsp;match&nbsp;e&nbsp;with<br/>
+&nbsp;&nbsp;|&nbsp;Var&nbsp;y&nbsp;=&gt;&nbsp;if&nbsp;(string_dec&nbsp;y&nbsp;x)&nbsp;then&nbsp;e'&nbsp;else&nbsp;e<br/>
+&nbsp;&nbsp;|&nbsp;Cst&nbsp;_&nbsp;=&gt;&nbsp;e<br/>
+&nbsp;&nbsp;|&nbsp;Add&nbsp;e1&nbsp;e2&nbsp;=&gt;&nbsp;Add&nbsp;(asubst&nbsp;e1&nbsp;x&nbsp;e')&nbsp;(asubst&nbsp;e2&nbsp;x&nbsp;e')<br/>
+&nbsp;&nbsp;|&nbsp;Sub&nbsp;e1&nbsp;e2&nbsp;=&gt;&nbsp;Sub&nbsp;(asubst&nbsp;e1&nbsp;x&nbsp;e')&nbsp;(asubst&nbsp;e2&nbsp;x&nbsp;e')<br/>
+&nbsp;&nbsp;end.<br/>
+<br/>
+Definition&nbsp;ainst&nbsp;(e&nbsp;:&nbsp;aexpr)&nbsp;(x&nbsp;:&nbsp;ident)&nbsp;(vx&nbsp;:&nbsp;Z)&nbsp;:=<br/>
+&nbsp;&nbsp;asubst&nbsp;e&nbsp;x&nbsp;(Cst&nbsp;vx).<br/>
+<br/>
+Fixpoint&nbsp;beval&nbsp;(s&nbsp;:&nbsp;store)&nbsp;(e&nbsp;:&nbsp;bexpr)&nbsp;:&nbsp;bool&nbsp;:=<br/>
+&nbsp;&nbsp;match&nbsp;e&nbsp;with<br/>
+&nbsp;&nbsp;|&nbsp;Bcst&nbsp;b&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;b<br/>
+&nbsp;&nbsp;|&nbsp;Ble&nbsp;e1&nbsp;e2&nbsp;&nbsp;&nbsp;=&gt;&nbsp;(aeval&nbsp;s&nbsp;e1&nbsp;&lt;?&nbsp;aeval&nbsp;s&nbsp;e2)Z<br/>
+&nbsp;&nbsp;|&nbsp;Band&nbsp;e1&nbsp;e2&nbsp;&nbsp;=&gt;&nbsp;beval&nbsp;s&nbsp;e1&nbsp;&amp;&amp;&nbsp;beval&nbsp;s&nbsp;e2<br/>
+&nbsp;&nbsp;|&nbsp;Bnot&nbsp;e&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;negb&nbsp;(beval&nbsp;s&nbsp;e)<br/>
+&nbsp;&nbsp;end.<br/>
+<br/>
+Fixpoint&nbsp;bsubst&nbsp;(e&nbsp;:&nbsp;bexpr)&nbsp;(x&nbsp;:&nbsp;ident)&nbsp;(e'&nbsp;:&nbsp;aexpr)&nbsp;:=<br/>
+&nbsp;&nbsp;match&nbsp;e&nbsp;with<br/>
+&nbsp;&nbsp;|&nbsp;Bcst&nbsp;_&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;e<br/>
+&nbsp;&nbsp;|&nbsp;Beq&nbsp;e1&nbsp;e2&nbsp;&nbsp;&nbsp;=&gt;&nbsp;Beq&nbsp;(asubst&nbsp;e1&nbsp;x&nbsp;e')&nbsp;(asubst&nbsp;e2&nbsp;x&nbsp;e')<br/>
+&nbsp;&nbsp;|&nbsp;Ble&nbsp;e1&nbsp;e2&nbsp;&nbsp;&nbsp;=&gt;&nbsp;Ble&nbsp;(asubst&nbsp;e1&nbsp;x&nbsp;e')&nbsp;(asubst&nbsp;e2&nbsp;x&nbsp;e')<br/>
+&nbsp;&nbsp;|&nbsp;Band&nbsp;e1&nbsp;e2&nbsp;&nbsp;=&gt;&nbsp;Band&nbsp;(bsubst&nbsp;e1&nbsp;x&nbsp;e')&nbsp;(bsubst&nbsp;e2&nbsp;x&nbsp;e')<br/>
+&nbsp;&nbsp;|&nbsp;Bnot&nbsp;e&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;Bnot&nbsp;(bsubst&nbsp;e&nbsp;x&nbsp;e')<br/>
+&nbsp;&nbsp;end.<br/>
+<br/>
+Definition&nbsp;binst&nbsp;(e&nbsp;:&nbsp;bexpr)&nbsp;(x&nbsp;:&nbsp;ident)&nbsp;(vx&nbsp;:&nbsp;Z)&nbsp;:=<br/>
+&nbsp;&nbsp;bsubst&nbsp;e&nbsp;x&nbsp;(Cst&nbsp;vx).<br/>
+<br/>
+<span class="comment">(**&nbsp;***&nbsp;Operational&nbsp;semantics&nbsp;of&nbsp;IMP&nbsp;*)</span><br/>
+<br/>
+<span class="comment">(**&nbsp;Updating&nbsp;a&nbsp;store&nbsp;*)</span><br/>
+Definition&nbsp;update&nbsp;(s&nbsp;:&nbsp;store)&nbsp;(x&nbsp;:&nbsp;ident)&nbsp;(v&nbsp;:&nbsp;Z)&nbsp;:&nbsp;store&nbsp;:=<br/>
+&nbsp;&nbsp;fun&nbsp;y&nbsp;=&gt;&nbsp;if&nbsp;string_dec&nbsp;y&nbsp;x&nbsp;then&nbsp;v&nbsp;else&nbsp;s&nbsp;y.<br/>
+<br/>
+<span class="comment">(**&nbsp;Subtitution&nbsp;lemma&nbsp;(for&nbsp;arithmetic&nbsp;expressions)&nbsp;*)</span><br/>
+Lemma&nbsp;aeval_asubst&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;s&nbsp;e&nbsp;x&nbsp;e',<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;aeval&nbsp;s&nbsp;(asubst&nbsp;e&nbsp;x&nbsp;e')&nbsp;=&nbsp;aeval&nbsp;(update&nbsp;s&nbsp;x&nbsp;(aeval&nbsp;s&nbsp;e'))&nbsp;e.<br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;e;&nbsp;intros;&nbsp;simpl&nbsp;in&nbsp;*;&nbsp;auto.<br/>
+&nbsp;&nbsp;-&nbsp;unfold&nbsp;update.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;destruct&nbsp;(string_dec&nbsp;i&nbsp;x)&nbsp;eqn:E;&nbsp;auto.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;rewrite&nbsp;IHe1,&nbsp;IHe2.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;rewrite&nbsp;IHe1,&nbsp;IHe2.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;Subtitution&nbsp;lemma&nbsp;(for&nbsp;boolean&nbsp;expressions)&nbsp;*)</span><br/>
+Lemma&nbsp;beval_bsubst&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;s&nbsp;c&nbsp;x&nbsp;e,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;(bsubst&nbsp;c&nbsp;x&nbsp;e)&nbsp;=&nbsp;beval&nbsp;(update&nbsp;s&nbsp;x&nbsp;(aeval&nbsp;s&nbsp;e))&nbsp;c.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;induction&nbsp;c;&nbsp;simpl&nbsp;in&nbsp;*;&nbsp;auto.<br/>
+&nbsp;&nbsp;all:&nbsp;try&nbsp;now&nbsp;do&nbsp;2&nbsp;rewrite&nbsp;&lt;-&nbsp;aeval_asubst.<br/>
+&nbsp;&nbsp;now&nbsp;rewrite&nbsp;IHc.<br/>
+&nbsp;&nbsp;now&nbsp;rewrite&nbsp;IHc1,&nbsp;IHc2.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;aeval_inst:<br/>
+&nbsp;&nbsp;forall&nbsp;s&nbsp;e&nbsp;x&nbsp;vx,&nbsp;aeval&nbsp;(update&nbsp;s&nbsp;x&nbsp;vx)&nbsp;e&nbsp;=&nbsp;aeval&nbsp;s&nbsp;(ainst&nbsp;e&nbsp;x&nbsp;vx).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;unfold&nbsp;ainst.<br/>
+&nbsp;&nbsp;now&nbsp;rewrite&nbsp;aeval_asubst.<br/>
+Qed.<br/>
+<br/>
+Lemma&nbsp;beval_inst:<br/>
+&nbsp;&nbsp;forall&nbsp;s&nbsp;c&nbsp;x&nbsp;vx,&nbsp;beval&nbsp;(update&nbsp;s&nbsp;x&nbsp;vx)&nbsp;c&nbsp;=&nbsp;beval&nbsp;s&nbsp;(binst&nbsp;c&nbsp;x&nbsp;vx).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;induction&nbsp;c;&nbsp;simpl;&nbsp;auto.<br/>
+&nbsp;&nbsp;all:&nbsp;try&nbsp;now&nbsp;do&nbsp;2&nbsp;rewrite&nbsp;aeval_inst.<br/>
+&nbsp;&nbsp;now&nbsp;rewrite&nbsp;IHc.<br/>
+&nbsp;&nbsp;now&nbsp;rewrite&nbsp;IHc1,&nbsp;IHc2.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;Big&nbsp;step&nbsp;semantics&nbsp;*)</span><br/>
+Inductive&nbsp;exec&nbsp;:&nbsp;store&nbsp;-&gt;&nbsp;IMP&nbsp;-&gt;&nbsp;store&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;|&nbsp;exec_Skip&nbsp;s&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;Skip&nbsp;s<br/>
+&nbsp;&nbsp;|&nbsp;exec_Aff&nbsp;s&nbsp;x&nbsp;e&nbsp;ve&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;aeval&nbsp;s&nbsp;e&nbsp;=&nbsp;ve&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;(Aff&nbsp;x&nbsp;e)&nbsp;(update&nbsp;s&nbsp;x&nbsp;ve)<br/>
+&nbsp;&nbsp;|&nbsp;exec_Seq&nbsp;s&nbsp;s'&nbsp;s''&nbsp;c1&nbsp;c2&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;c1&nbsp;s'&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s'&nbsp;c2&nbsp;s''&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;(Seq&nbsp;c1&nbsp;c2)&nbsp;s''<br/>
+&nbsp;&nbsp;|&nbsp;exec_Ite_true&nbsp;s&nbsp;s'&nbsp;e&nbsp;c1&nbsp;c2&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;e&nbsp;=&nbsp;true&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;c1&nbsp;s'&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;(Ite&nbsp;e&nbsp;c1&nbsp;c2)&nbsp;s'<br/>
+&nbsp;&nbsp;|&nbsp;exec_Ite_false&nbsp;s&nbsp;s'&nbsp;e&nbsp;c1&nbsp;c2&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;e&nbsp;=&nbsp;false&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;c2&nbsp;s'&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;(Ite&nbsp;e&nbsp;c1&nbsp;c2)&nbsp;s'<br/>
+&nbsp;&nbsp;|&nbsp;exec_loop_true&nbsp;s&nbsp;s'&nbsp;s''&nbsp;e&nbsp;c&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;e&nbsp;=&nbsp;true&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;c&nbsp;s'&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s'&nbsp;(Loop&nbsp;e&nbsp;c)&nbsp;s''&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;(Loop&nbsp;e&nbsp;c)&nbsp;s''<br/>
+&nbsp;&nbsp;|&nbsp;exec_loop_false&nbsp;s&nbsp;e&nbsp;c&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;e&nbsp;=&nbsp;false&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s&nbsp;(Loop&nbsp;e&nbsp;c)&nbsp;s.<br/>
+<br/>
+<span class="comment">(**&nbsp;Small&nbsp;step&nbsp;semantics&nbsp;*)</span><br/>
+Inductive&nbsp;step&nbsp;:&nbsp;(store&nbsp;*&nbsp;IMP)&nbsp;-&gt;&nbsp;(store&nbsp;*&nbsp;IMP)&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;|&nbsp;step_Aff&nbsp;s&nbsp;x&nbsp;e&nbsp;ve&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;aeval&nbsp;s&nbsp;e&nbsp;=&nbsp;ve&nbsp;-&gt;&nbsp;step&nbsp;(s,&nbsp;Aff&nbsp;x&nbsp;e)&nbsp;(update&nbsp;s&nbsp;x&nbsp;ve,&nbsp;Skip)<br/>
+&nbsp;&nbsp;|&nbsp;step_Seq&nbsp;s1&nbsp;s2&nbsp;c1&nbsp;c2&nbsp;c3&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;step&nbsp;(s1,&nbsp;c1)&nbsp;(s2,&nbsp;c2)&nbsp;-&gt;&nbsp;step&nbsp;(s1,&nbsp;Seq&nbsp;c1&nbsp;c3)&nbsp;(s2,&nbsp;Seq&nbsp;c2&nbsp;c3)<br/>
+&nbsp;&nbsp;|&nbsp;step_Seq_Skip&nbsp;s&nbsp;c&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;step&nbsp;(s,&nbsp;Seq&nbsp;Skip&nbsp;c)&nbsp;(s,&nbsp;c)<br/>
+&nbsp;&nbsp;|&nbsp;step_Ite_true&nbsp;s&nbsp;e&nbsp;c1&nbsp;c2&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;e&nbsp;=&nbsp;true&nbsp;-&gt;&nbsp;step&nbsp;(s,&nbsp;Ite&nbsp;e&nbsp;c1&nbsp;c2)&nbsp;(s,&nbsp;c1)<br/>
+&nbsp;&nbsp;|&nbsp;step_Ite_false&nbsp;s&nbsp;e&nbsp;c1&nbsp;c2&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;e&nbsp;=&nbsp;false&nbsp;-&gt;&nbsp;step&nbsp;(s,&nbsp;Ite&nbsp;e&nbsp;c1&nbsp;c2)&nbsp;(s,&nbsp;c2)<br/>
+&nbsp;&nbsp;|&nbsp;step_Loop_true&nbsp;s&nbsp;e&nbsp;c&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;e&nbsp;=&nbsp;true&nbsp;-&gt;&nbsp;step&nbsp;(s,&nbsp;Loop&nbsp;e&nbsp;c)&nbsp;(s,&nbsp;Seq&nbsp;c&nbsp;(Loop&nbsp;e&nbsp;c))<br/>
+&nbsp;&nbsp;|&nbsp;step_Loop_false&nbsp;s&nbsp;e&nbsp;c&nbsp;:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;beval&nbsp;s&nbsp;e&nbsp;=&nbsp;false&nbsp;-&gt;&nbsp;step&nbsp;(s,&nbsp;Loop&nbsp;e&nbsp;c)&nbsp;(s,&nbsp;Skip).<br/>
+<br/>
+Lemma&nbsp;aeval_stable:<br/>
+&nbsp;&nbsp;forall&nbsp;env1&nbsp;env2&nbsp;e,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(forall&nbsp;x,&nbsp;env1&nbsp;x&nbsp;=&nbsp;env2&nbsp;x)&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;aeval&nbsp;env1&nbsp;e&nbsp;=&nbsp;aeval&nbsp;env2&nbsp;e.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.<br/>
+&nbsp;&nbsp;induction&nbsp;e;&nbsp;simpl;&nbsp;auto.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;rewrite&nbsp;IHe1,&nbsp;IHe2.<br/>
+&nbsp;&nbsp;-&nbsp;now&nbsp;rewrite&nbsp;IHe1,&nbsp;IHe2.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;Sequences&nbsp;of&nbsp;steps&nbsp;*)</span><br/>
+Definition&nbsp;steps&nbsp;:=&nbsp;star&nbsp;step.<br/>
+<br/>
+<span class="comment">(**&nbsp;Taking&nbsp;several&nbsp;steps&nbsp;to&nbsp;the&nbsp;left&nbsp;of&nbsp;a&nbsp;sequence&nbsp;*)</span><br/>
+Lemma&nbsp;steps_seq&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;s1&nbsp;s2&nbsp;c1&nbsp;c2&nbsp;c3,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;steps&nbsp;(s1,&nbsp;c1)&nbsp;(s2,&nbsp;c2)&nbsp;-&gt;&nbsp;steps&nbsp;(s1,&nbsp;Seq&nbsp;c1&nbsp;c3)&nbsp;(s2,&nbsp;Seq&nbsp;c2&nbsp;c3).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;*&nbsp;H.&nbsp;dependent&nbsp;induction&nbsp;H.<br/>
+&nbsp;&nbsp;*&nbsp;reflexivity.<br/>
+&nbsp;&nbsp;*&nbsp;destruct&nbsp;y&nbsp;as&nbsp;<span class="inlinecode"><span class="id" title="var">s1'</span></span> <span class="inlinecode"><span class="id" title="var">c1'</span></span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eapply&nbsp;star_step.&nbsp;apply&nbsp;step_Seq,&nbsp;H.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;now&nbsp;apply&nbsp;IHstar.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**<br/>
+&nbsp;&nbsp;If&nbsp;a&nbsp;program&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;starting&nbsp;in&nbsp;state&nbsp;<span class="inlinecode"><span class="id" title="var">s</span></span>&nbsp;terminates&nbsp;in&nbsp;<br/>
+&nbsp;&nbsp;state&nbsp;<span class="inlinecode"><span class="id" title="var">s'</span></span>&nbsp;then&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;can&nbsp;take&nbsp;a&nbsp;sequence&nbsp;of&nbsp;steps<br/>
+&nbsp;&nbsp;from&nbsp;<span class="inlinecode"><span class="id" title="var">s</span></span>&nbsp;to&nbsp;<span class="inlinecode"><span class="id" title="var">s'</span></span><br/>
+*)</span><br/>
+Theorem&nbsp;exec_steps&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;p&nbsp;s&nbsp;s',&nbsp;exec&nbsp;s&nbsp;p&nbsp;s'&nbsp;-&gt;&nbsp;steps&nbsp;(s,&nbsp;p)&nbsp;(s',&nbsp;Skip).<br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;1.<br/>
+&nbsp;&nbsp;-&nbsp;reflexivity.<br/>
+&nbsp;&nbsp;-&nbsp;eapply&nbsp;star_step.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;apply&nbsp;(step_Aff&nbsp;_&nbsp;_&nbsp;_&nbsp;_&nbsp;H).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;reflexivity.<br/>
+&nbsp;&nbsp;-&nbsp;etransitivity.&nbsp;apply&nbsp;steps_seq,&nbsp;IHexec1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eapply&nbsp;star_step.&nbsp;apply&nbsp;step_Seq_Skip.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;IHexec2.<br/>
+&nbsp;&nbsp;-&nbsp;eapply&nbsp;star_step.&nbsp;eapply&nbsp;(step_Ite_true&nbsp;_&nbsp;_&nbsp;_&nbsp;_&nbsp;H).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;IHexec.<br/>
+&nbsp;&nbsp;-&nbsp;eapply&nbsp;star_step.&nbsp;eapply&nbsp;(step_Ite_false&nbsp;_&nbsp;_&nbsp;_&nbsp;_&nbsp;H).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;IHexec.<br/>
+&nbsp;&nbsp;-&nbsp;eapply&nbsp;star_step.&nbsp;eapply&nbsp;(step_Loop_true&nbsp;_&nbsp;_&nbsp;_&nbsp;H).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;etransitivity.&nbsp;eapply&nbsp;(steps_seq&nbsp;_&nbsp;_&nbsp;_&nbsp;_&nbsp;_&nbsp;IHexec1).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eapply&nbsp;star_step.&nbsp;eapply&nbsp;step_Seq_Skip.&nbsp;apply&nbsp;IHexec2.<br/>
+&nbsp;&nbsp;-&nbsp;eapply&nbsp;star_step.&nbsp;eapply&nbsp;(step_Loop_false&nbsp;_&nbsp;_&nbsp;_&nbsp;H).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;reflexivity.<br/>
+Qed.<br/>
+<br/>
+Theorem&nbsp;step_exec_exec&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;c1&nbsp;c2&nbsp;s1&nbsp;s2&nbsp;s3,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;step&nbsp;(s1,&nbsp;c1)&nbsp;(s2,&nbsp;c2)&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s2&nbsp;c2&nbsp;s3&nbsp;-&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;exec&nbsp;s1&nbsp;c1&nbsp;s3.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;*&nbsp;H1.&nbsp;generalize&nbsp;s3.&nbsp;clear&nbsp;s3.<br/>
+&nbsp;&nbsp;dependent&nbsp;induction&nbsp;H1;&nbsp;intros.<br/>
+&nbsp;&nbsp;-&nbsp;inversion_clear&nbsp;H.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;now&nbsp;apply&nbsp;exec_Aff.<br/>
+&nbsp;&nbsp;-&nbsp;inversion_clear&nbsp;H.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eapply&nbsp;exec_Seq;&nbsp;eauto.<br/>
+&nbsp;&nbsp;-&nbsp;eapply&nbsp;exec_Seq;&nbsp;eauto&nbsp;using&nbsp;exec.<br/>
+&nbsp;&nbsp;-&nbsp;eapply&nbsp;exec_Ite_true;&nbsp;eauto.<br/>
+&nbsp;&nbsp;-&nbsp;eapply&nbsp;exec_Ite_false;&nbsp;eauto.<br/>
+&nbsp;&nbsp;-&nbsp;inversion_clear&nbsp;H0.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eapply&nbsp;exec_loop_true;&nbsp;eauto.<br/>
+&nbsp;&nbsp;-&nbsp;inversion&nbsp;H0;&nbsp;subst.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eapply&nbsp;exec_loop_false;&nbsp;eauto.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**<br/>
+&nbsp;&nbsp;If&nbsp;a&nbsp;program&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;can&nbsp;take&nbsp;a&nbsp;sequence&nbsp;of&nbsp;steps<br/>
+&nbsp;&nbsp;from&nbsp;<span class="inlinecode"><span class="id" title="var">s</span></span>&nbsp;to&nbsp;<span class="inlinecode"><span class="id" title="var">s'</span></span>&nbsp;then&nbsp;<span class="inlinecode"><span class="id" title="var">p</span></span>&nbsp;terminates&nbsp;in<br/>
+&nbsp;&nbsp;state&nbsp;<span class="inlinecode"><span class="id" title="var">s'</span></span>&nbsp;when&nbsp;executed&nbsp;in&nbsp;<span class="inlinecode"><span class="id" title="var">s</span></span><br/>
+*)</span><br/>
+Theorem&nbsp;steps_exec&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;p&nbsp;s&nbsp;s',&nbsp;steps&nbsp;(s,&nbsp;p)&nbsp;(s',&nbsp;Skip)&nbsp;-&gt;&nbsp;exec&nbsp;s&nbsp;p&nbsp;s'.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;dependent&nbsp;induction&nbsp;H.<br/>
+&nbsp;&nbsp;-&nbsp;apply&nbsp;exec_Skip.<br/>
+&nbsp;&nbsp;-&nbsp;destruct&nbsp;y&nbsp;as&nbsp;<span class="inlinecode"><span class="id" title="var">s1</span></span> <span class="inlinecode"><span class="id" title="var">p1</span></span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;eapply&nbsp;step_exec_exec;&nbsp;eauto.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;**&nbsp;Progression&nbsp;and&nbsp;Erroneous&nbsp;States&nbsp;&nbsp;*)</span><br/>
+<br/>
+<span class="comment">(**&nbsp;A&nbsp;configuration&nbsp;is&nbsp;said&nbsp;to&nbsp;<span class="inlinecode"><span class="id" title="tactic">progress</span></span>&nbsp;if&nbsp;it&nbsp;is&nbsp;a&nbsp;<span class="inlinecode"><span class="id" title="var">Skip</span></span>&nbsp;statement&nbsp;or<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;it&nbsp;can&nbsp;take&nbsp;a&nbsp;<span class="inlinecode"><span class="id" title="var">step</span></span><br/>
+*)</span><br/>
+Definition&nbsp;progress&nbsp;'((s,&nbsp;p)&nbsp;:&nbsp;(store&nbsp;*&nbsp;IMP))&nbsp;:&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;p&nbsp;=&nbsp;Skip&nbsp;\/&nbsp;exists&nbsp;s'&nbsp;p',&nbsp;step&nbsp;(s,&nbsp;p)&nbsp;(s',&nbsp;p').<br/>
+<br/>
+<span class="comment">(**&nbsp;An&nbsp;error&nbsp;state&nbsp;is&nbsp;a&nbsp;state&nbsp;that&nbsp;can't&nbsp;progress&nbsp;*)</span><br/>
+Definition&nbsp;error_state&nbsp;(st&nbsp;:&nbsp;(store&nbsp;*&nbsp;IMP))&nbsp;:&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;~progress&nbsp;st.<br/>
+<br/>
+<span class="comment">(**&nbsp;<span class="inlinecode"><span class="id" title="var">Skip</span></span>&nbsp;can&nbsp;progress&nbsp;*)</span><br/>
+Theorem&nbsp;progress_Skip:<br/>
+&nbsp;&nbsp;forall&nbsp;env,&nbsp;progress&nbsp;(env,&nbsp;Skip).<br/>
+Proof.<br/>
+&nbsp;&nbsp;now&nbsp;left.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;<span class="inlinecode"><span class="id" title="var">Ite</span></span>&nbsp;can&nbsp;progress&nbsp;*)</span><br/>
+Theorem&nbsp;progress_Ite:<br/>
+&nbsp;&nbsp;forall&nbsp;env&nbsp;b&nbsp;p1&nbsp;p2,&nbsp;progress&nbsp;(env,&nbsp;Ite&nbsp;b&nbsp;p1&nbsp;p2).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;*.&nbsp;right.<br/>
+&nbsp;&nbsp;destruct&nbsp;(beval&nbsp;env&nbsp;b)&nbsp;eqn:Hsat.<br/>
+&nbsp;&nbsp;*&nbsp;exists&nbsp;env,&nbsp;p1.&nbsp;now&nbsp;econstructor.<br/>
+&nbsp;&nbsp;*&nbsp;exists&nbsp;env,&nbsp;p2.&nbsp;now&nbsp;econstructor.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;<span class="inlinecode"><span class="id" title="var">Aff</span></span>&nbsp;can&nbsp;progress&nbsp;*)</span><br/>
+Theorem&nbsp;progress_Aff:<br/>
+&nbsp;&nbsp;forall&nbsp;env&nbsp;x&nbsp;e,&nbsp;progress&nbsp;(env,&nbsp;Aff&nbsp;x&nbsp;e).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;*.&nbsp;right.<br/>
+&nbsp;&nbsp;repeat&nbsp;econstructor.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;<span class="inlinecode"><span class="id" title="var">Aff</span></span>&nbsp;can&nbsp;progress&nbsp;*)</span><br/>
+Theorem&nbsp;progress_Seq:<br/>
+&nbsp;&nbsp;forall&nbsp;env&nbsp;p1&nbsp;p2,&nbsp;progress&nbsp;(env,&nbsp;p1)&nbsp;-&gt;&nbsp;progress&nbsp;(env,&nbsp;Seq&nbsp;p1&nbsp;p2).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;*&nbsp;<span class="inlinecode">-&gt;</span> <span class="inlinecode">|</span> <span class="inlinecode">(<span class="id" title="var">s'</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">p'</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">H</span>)</span>.<br/>
+&nbsp;&nbsp;-&nbsp;right.&nbsp;exists&nbsp;env,&nbsp;p2.&nbsp;econstructor.<br/>
+&nbsp;&nbsp;-&nbsp;right.&nbsp;exists&nbsp;s',&nbsp;(Seq&nbsp;p'&nbsp;p2).&nbsp;now&nbsp;econstructor.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;<span class="inlinecode"><span class="id" title="var">Loop</span></span>&nbsp;can&nbsp;progress&nbsp;*)</span><br/>
+Theorem&nbsp;progress_Loop:<br/>
+&nbsp;&nbsp;forall&nbsp;env&nbsp;b&nbsp;p,&nbsp;progress&nbsp;(env,&nbsp;Loop&nbsp;b&nbsp;p).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;*.&nbsp;right.<br/>
+&nbsp;&nbsp;destruct&nbsp;(beval&nbsp;env&nbsp;b)&nbsp;eqn:Hsat.<br/>
+&nbsp;&nbsp;-&nbsp;exists&nbsp;env.&nbsp;now&nbsp;repeat&nbsp;econstructor.<br/>
+&nbsp;&nbsp;-&nbsp;exists&nbsp;env,&nbsp;Skip.&nbsp;now&nbsp;repeat&nbsp;econstructor.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;If&nbsp;a&nbsp;sequence&nbsp;<span class="inlinecode"><span class="id" title="var">Seq</span></span> <span class="inlinecode"><span class="id" title="var">p1</span></span> <span class="inlinecode"><span class="id" title="var">p2</span></span>&nbsp;can't&nbsp;progress,&nbsp;then&nbsp;<span class="inlinecode"><span class="id" title="var">p1</span></span>&nbsp;can't&nbsp;progress&nbsp;*)</span><br/>
+Theorem&nbsp;error_state_seq:<br/>
+&nbsp;&nbsp;forall&nbsp;s&nbsp;p1&nbsp;p2,&nbsp;error_state&nbsp;(s,&nbsp;Seq&nbsp;p1&nbsp;p2)&nbsp;-&gt;&nbsp;error_state&nbsp;(s,&nbsp;p1).<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros&nbsp;*&nbsp;H&nbsp;Hcontr.<br/>
+&nbsp;&nbsp;apply&nbsp;H,&nbsp;progress_Seq,&nbsp;Hcontr.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;Syntactic&nbsp;characterization&nbsp;of&nbsp;error&nbsp;states&nbsp;*)</span><br/>
+Inductive&nbsp;error&nbsp;:&nbsp;IMP&nbsp;-&gt;&nbsp;Prop&nbsp;:=<br/>
+&nbsp;&nbsp;|&nbsp;error_Err&nbsp;:&nbsp;error&nbsp;Err<br/>
+&nbsp;&nbsp;|&nbsp;error_Seq&nbsp;p1&nbsp;p2&nbsp;:&nbsp;error&nbsp;p1&nbsp;-&gt;&nbsp;error&nbsp;(Seq&nbsp;p1&nbsp;p2).<br/>
+<br/>
+Theorem&nbsp;error_state_error&nbsp;:<br/>
+&nbsp;&nbsp;forall&nbsp;s&nbsp;p,&nbsp;error_state&nbsp;(s,&nbsp;p)&nbsp;&lt;-&gt;&nbsp;error&nbsp;p.<br/>
+Proof.<br/>
+&nbsp;&nbsp;intros.&nbsp;split.<br/>
+&nbsp;&nbsp;-&nbsp;intros&nbsp;Hcontr.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;induction&nbsp;p;&nbsp;try&nbsp;easy.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;now&nbsp;specialize&nbsp;(Hcontr&nbsp;(progress_Skip&nbsp;s)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;now&nbsp;specialize&nbsp;(Hcontr&nbsp;(progress_Ite&nbsp;s&nbsp;_&nbsp;_&nbsp;_)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;apply&nbsp;error_state_seq&nbsp;in&nbsp;Hcontr.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specialize&nbsp;(IHp1&nbsp;Hcontr).&nbsp;now&nbsp;econstructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;now&nbsp;specialize&nbsp;(Hcontr&nbsp;(progress_Aff&nbsp;s&nbsp;_&nbsp;_)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;econstructor.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;now&nbsp;specialize&nbsp;(Hcontr&nbsp;(progress_Loop&nbsp;s&nbsp;_&nbsp;_)).<br/>
+&nbsp;&nbsp;-&nbsp;induction&nbsp;1.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;intros&nbsp;<span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">|</span> <span class="inlinecode">(<span class="id" title="var">s'</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">p'</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">H</span>)</span>;&nbsp;try&nbsp;easy.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;intros&nbsp;<span class="inlinecode"><span class="id" title="var">H'</span></span> <span class="inlinecode">|</span> <span class="inlinecode">(<span class="id" title="var">s'</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">p'</span></span> <span class="inlinecode">&amp;</span> <span class="inlinecode"><span class="id" title="var">H'</span>)</span>;&nbsp;try&nbsp;easy.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inversion&nbsp;H';&nbsp;subst.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assert&nbsp;(Hprog&nbsp;:&nbsp;progress&nbsp;(s,&nbsp;p1))&nbsp;by&nbsp;(right;&nbsp;repeat&nbsp;econstructor;&nbsp;eauto).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;(IHerror&nbsp;Hprog).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inversion&nbsp;H.<br/>
+Qed.<br/>
+<br/>
+<span class="comment">(**&nbsp;Executable&nbsp;check&nbsp;for&nbsp;erroneous&nbsp;state&nbsp;*)</span><br/>
+Fixpoint&nbsp;is_error&nbsp;(p&nbsp;:&nbsp;IMP)&nbsp;:&nbsp;bool&nbsp;:=<br/>
+&nbsp;&nbsp;match&nbsp;p&nbsp;with<br/>
+&nbsp;&nbsp;|&nbsp;Err&nbsp;=&gt;&nbsp;true<br/>
+&nbsp;&nbsp;|&nbsp;Seq&nbsp;p&nbsp;_&nbsp;=&gt;&nbsp;is_error&nbsp;p<br/>
+&nbsp;&nbsp;|&nbsp;_&nbsp;=&gt;&nbsp;false<br/>
+&nbsp;&nbsp;end.<br/>
+<br/>
+Theorem&nbsp;is_error_correct:<br/>
+&nbsp;&nbsp;forall&nbsp;p,&nbsp;is_error&nbsp;p&nbsp;=&nbsp;true&nbsp;&lt;-&gt;&nbsp;error&nbsp;p.<br/>
+Proof.<br/>
+&nbsp;&nbsp;induction&nbsp;p;&nbsp;try&nbsp;easy.<br/>
+&nbsp;&nbsp;-&nbsp;split.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;intros&nbsp;H*)</span></div>
+</div>
+<div id="footer">
+  Generated by <a href="http://coq.inria.fr/">coqdoc</a> and improved with <a href="https://github.com/tebbi/coqdocjs">CoqdocJS</a>
+</div>
+</div>
+</body>
+
+</html>
