@@ -36,6 +36,7 @@ pip install -e .[dev,test]
 ```
 
 for PyWiSE.
+Alternatively, you can [use our Docker container](#using-our-docker-container) that bundles all requirements and comes with readily built (Py)WiSE versions.
 
 ### GCD
 
