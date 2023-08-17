@@ -9,6 +9,20 @@ This repository provides
 - The OCaml harness and instructions for deriving the OCaml version of WiSE (directory `Coq/extraction/`);
 - The Python derivative PyWiSE (directory `PyWiSE/`).
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [WiSE](#wise)
+    - [Running the Examples from the Paper](#running-the-examples-from-the-paper)
+        - [GCD](#gcd)
+        - [Integer Square Root](#integer-square-root)
+        - [Factorial](#factorial)
+    - [Using our Docker Container](#using-our-docker-container)
+    - [License](#license)
+
+<!-- markdown-toc end -->
+
+
 ## Running the Examples from the Paper
 
 The Coq version of WiSE was mechanically verified.
