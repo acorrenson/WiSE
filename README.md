@@ -296,6 +296,64 @@ BUG FOUND
 
 ### Factorial
 
+The factorial example uses three macros:
+One for division, one for multiplication, and one for the specification (postcondition).
+The main code reads
+
+```
+assert n >= 2;
+
+factorial = 1;
+i = 1;
+while i <= n do
+  mul(mul_result, factorial, i, _i);
+  factorial = mul_result;
+  i = i + 1
+od;
+
+factorial_spec(n, factorial, _i, _d, _m)
+```
+
+To analyze the example with PyWiSE, run (from the project's main directory)
+
+```bash
+cd PyWiSE/
+source venv/bin/activate
+cd examples/
+wise -n 100 -a "n >= 2" factorial_correct.imp
+```
+
+The `-n` parameter controls the number of symbolic execution states the analysis produces and inspects.
+
+The expected output of this run is
+
+```
+Analyzing file factorial_correct.imp
+
+No bug found at depth 100.
+```
+
+The "buggy" version of integer square root replaces the line `should be _s > x` by `while _s < x do`.
+To analyze the mutated example, run (from the project's main directory)
+
+```bash
+cd PyWiSE/
+source venv/bin/activate
+cd examples/
+wise -n 100 -a "n >= 2" factorial_buggy.imp
+```
+
+The expected output of this run is
+
+```
+Analyzing file factorial_buggy.imp
+
+BUG FOUND
+  Path:          (n >= 2) & (n < 3)
+  Example Input: n := 2
+  Store:         {}{factorial -> 1}{i -> 1}{mul_result -> 1}{_i -> 1}{factorial -> 1}{i -> 2}{mul_result -> 1}{_i -> 1}{mul_result -> 3}{_i -> 2}{factorial -> 3}{i -> 3}{_i -> 2}{_m -> 3}{_d -> 0}{_d -> 1}{_m -> 1}
+```
+
 ## Using our Docker Container
 
 TODO
