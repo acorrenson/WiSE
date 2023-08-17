@@ -36,7 +36,7 @@ let report (s : status) =
     | Some false ->
       Printf.printf "[\027[92mV\027[0m] => Potential bug (CLEARED) %a\n" print_bexpr path
     | Some true ->
-      Printf.printf "[\027[31mx\027[0m] => Found bug %a\n" print_bexpr (bsimp path);
+      Printf.printf "[\027[31mx\027[0m] => Found bug %a\n" print_bexpr path;
       prompt ()
     | None ->
       Printf.printf "[\027[31m?\027[0m] => Potential bug (NOT CLEARED) %a\n" print_bexpr path;

@@ -149,7 +149,7 @@ let parse_asssume =
   token "assume" >> spaces >> parse_bexpr
 
 let parse_assert =
-  token "assert" >> spaces >> parse_bexpr => (fun x -> Ite (x, Err, Skip))
+  token "assert" >> spaces >> parse_bexpr => (fun x -> Ite (x, Skip, Err))
 
 let parse_prelude =
   many parse_asssume => big_and

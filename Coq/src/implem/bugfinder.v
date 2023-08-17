@@ -97,6 +97,8 @@ Example my_prog :=
 Compute (peek 10 (find_bugs my_prog)).
 Example a := (Var "a"%string).
 Example b := (Var "b"%string).
+Example olda := (Var "olda"%string).
+Example oldb := (Var "oldb"%string).
 Example trivial_assertion :=
   Seq
     (Aff "a"%string b)
@@ -119,10 +121,10 @@ function gcd(a, b)
 Example gcd :=
   Loop
     (Bnot (Beq a b))
-    (Ite
-       (Ble a b)
-       (Aff "b"%string (Sub b a))
-       (Aff "a"%string (Sub a b))).
+      (Ite
+        (Ble a b)
+        (Aff "b"%string (Sub b a))
+        (Aff "a"%string (Sub a b))).
 
 Example init_store (x : ident) : Z :=
   match x with
@@ -193,6 +195,8 @@ Example gcd_assertions :=
              (Aff "b"%string (Sub b a))
              (Aff "a"%string (Sub a b)))
           (Assert (Ble (Add (Add a b) (Cst 1%Z)) (Add a0 b0)))))).
+Compute (peek 15 (find_bugs gcd_assertions)).
+
 
 Example init_store' (x : ident) : Z :=
   match x with

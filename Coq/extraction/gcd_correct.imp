@@ -11,5 +11,5 @@ loop a != b {
     a = a - b
   }
 
-  assert a >= 0 and b >= 0 and (a < olda or b < oldb)
+  assert (a + b + 1 <= olda + oldb)
 }
