@@ -199,22 +199,101 @@ The expected output of this run is
 Analyzing file gcd_buggy.imp
 
 BUG FOUND
-  Path:          0 <= a and not (0 == a) and 0 <= b and not (0 == b) and not (a <= 0) and not (b <= 0) and not (a == b) and not (a <= b) and not (0 <= (a + b) and 0 <= b and b <= 0 and not (b == 0))
+  Path:          (a > b) & (b > 0) & Ne(a, 0)
   Example Input: a := 2, b := 1
-  Store:         {}{old_a -> a}{old_b -> b}{a -> (a + b)}
+  Store:         {}{old_a -> a}{old_b -> b}{a -> a + b}
 BUG FOUND
-  Path:          0 <= a and not (a == 0) and 0 <= b and not (b == 0) and not (a <= 0) and not (b <= 0) and not (a == b) and a <= b and not (not (0 <= a and 0 <= (b - a) and a <= a and not (a == a)) and not ((b - a) <= b and not ((b - a) == b))) and not (a == (b - a)) and not (a <= (b - a)) and not (not (not (0 <= (a + (b - a)) and 0 <= (b - a) and (a + (b - a)) <= a and not ((a + (b - a)) == a)) and not ((b - a) <= (b - a) and not ((b - a) == (b - a)))))
+  Path:          (a > 0) & (a < b) & Ne(b, 0) & (b < 2*a)
   Example Input: a := 2, b := 3
-  Store:         {}{old_a -> a}{old_b -> b}{b -> (b - a)}{old_a -> a}{old_b -> (b - a)}{a -> (a + (b - a))}
+  Store:         {}{old_a -> a}{old_b -> b}{b -> -a + b}{old_a -> a}{old_b -> -a + b}{a -> b}
 BUG FOUND
-  Path:          0 <= a and not (a == 0) and 0 <= b and not (b == 0) and not (a <= 0) and not (b <= 0) and not (a == b) and a <= b and not (not (0 <= a and 0 <= (b - a) and a <= a and not (a == a)) and not ((b - a) <= b and not ((b - a) == b))) and not (a == (b - a)) and a <= (b - a) and not (not (0 <= a and 0 <= ((b - a) - a) and a <= a and not (a == a)) and not (((b - a) - a) <= (b - a) and not (((b - a) - a) == (b - a)))) and not (a == ((b - a) - a)) and not (a <= ((b - a) - a)) and not (not (not (0 <= (a + ((b - a) - a)) and 0 <= ((b - a) - a) and (a + ((b - a) - a)) <= a and not ((a + ((b - a) - a)) == a)) and not (((b - a) - a) <= ((b - a) - a) and not (((b - a) - a) == ((b - a) - a)))))
+  Path:          (a > 0) & (a < b) & Ne(b, 0) & (b > 2*a) & (b < 3*a)
   Example Input: a := 2, b := 5
-  Store:         {}{old_a -> a}{old_b -> b}{b -> (b - a)}{old_a -> a}{old_b -> (b - a)}{b -> ((b - a) - a)}{old_a -> a}{old_b -> ((b - a) - a)}{a -> (a + ((b - a) - a))}
+  Store:         {}{old_a -> a}{old_b -> b}{b -> -a + b}{old_a -> a}{old_b -> -a + b}{b -> -2*a + b}{old_a -> a}{old_b -> -2*a + b}{a -> -a + b}
+```
+
+The displayed expressions are not in IMP's expression language since the `simplify` option, which is turned on by default in PyWiSE, uses sympy to output compressed terms to the user.
+
+### Integer Square Root
+
+In this example, we compute the integer square root of a strictly positive number.
+The algorithm must calculate a number's square multiple times.
+Since IMP's syntax does not know multiplication, we must compute the square `s` of a number `r` by repeated addition inside a loop:
+
+```
+s = r;
+i = 1;
+while i < r do
+  s = s + r;
+  i = i + 1
+od
+```
+
+To relieve us from spelling out this primitive operation multiple times in the code, PyWiSE provides a simple macro mechanism.
+Thus, we can write:
+
+```
+macro square(s, r, i)
+begin
+  s = r;
+  i = 1;
+  while i < r do
+   s = s + r;
+   i = i + 1
+  od
+end
+```
+
+and use the macro like `square(_s, r, r, _i)` in the code.
+The effect is that the statement `square(_s, r, r, _`i)` is replaced by the macro content after substituting the formal parameters.
+Macros can only call other macros that are defined earlier in a file.
+Consequently (and because they are *inlined* after pre-processing), they cannot be (mutually) recursive.
+We refer to [the README of PyWiSE](PyWiSE/README.md) for more information on macros.
+
+Since macros are only implemented in PyWiSE's frontend, the integer square root example with macros does not work in (Coq) WiSE.
+Interested users may still use WiSE for this example after manually inlining the `square` macro.
+
+To analyze the example with PyWiSE, run (from the project's main directory)
+
+```bash
+cd PyWiSE/
+source venv/bin/activate
+cd examples/
+wise -n 100 -a "x > 0" integer_sqrt_correct.imp
+```
+
+The `-n` parameter controls the number of symbolic execution states the analysis produces and inspects.
+
+The expected output of this run is
+
+```
+Analyzing file integer_sqrt_correct.imp
+
+No bug found at depth 100.
+```
+
+The "buggy" version of integer square root replaces the line `should be _s > x` by `while _s < x do`.
+To analyze the mutated example, run (from the project's main directory)
+
+```bash
+cd PyWiSE/
+source venv/bin/activate
+cd examples/
+wise -n 100 -a "x > 0" integer_sqrt_buggy.imp
+```
+
+The expected output of this run is
+
+```
+Analyzing file examples/integer_sqrt_buggy.imp
+
+BUG FOUND
+  Path:          (x <= 2) & (x > 1) & Ne(x, 0) & ((x > 0) | (x < -3/2))
+  Example Input: x := 2
+  Store:         {}{r -> x}{_s -> x}{_i -> 1}{_s -> 2*x}{_i -> 2}{_s_1 -> x}{_i -> 1}{_s_1 -> 2*x}{_i -> 2}{_s_2 -> x + 1}{_i -> 1}{_s_2 -> 2*x + 2}{_i -> 2}{_s_2 -> 3*x + 3}{_i -> 3}
 ```
 
 ### Factorial
-
-### Integer Square Root
 
 ## Using our Docker Container
 
