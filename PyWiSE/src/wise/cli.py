@@ -7,7 +7,7 @@ from antlr4.error.Errors import ParseCancellationException
 import wise
 from wise.bugfinder import find_bugs, BugFound, find_bugs_depth_first, \
     find_bugs_assuming
-from wise.helpers import simplify_expr
+from wise.helpers import simplify_expr, simplify_sympy, simplify_store_sympy
 from wise.parser import parse_imp, parse_bexpr
 
 # Exit Codes
@@ -19,7 +19,7 @@ def main():
     parser = argparse.ArgumentParser(
         prog="wise",
         description="A Python implementation of the verified symbolic executor WiSE "
-        + f"(v{wise.__version__})",
+                    + f"(v{wise.__version__})",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
@@ -44,7 +44,8 @@ def main():
         type=bool,
         action=argparse.BooleanOptionalAction,
         default=True,
-        help="simplify output path conditions",
+        help=("simplify output path conditions and stores in the output; the result "
+              + "maybe outside IMP's expression language"),
     )
 
     parser.add_argument(
@@ -101,12 +102,10 @@ def main():
             print("BUG FOUND")
             path, store, _ = next_result.s
 
-            if simplify:
-                path = simplify_expr(path)
-
-            print(f"  Path:          {path}")
+            print(f"  Path:          {simplify_sympy(path) if simplify else path}")
             print(f"  Example Input: {example_input(path)}")
-            print(f"  Store:         {store}")
+            print(
+                f"  Store:         {simplify_store_sympy(store) if simplify else store}")
 
     if not bug_found:
         print(f"No bug found at depth {nodes}.")

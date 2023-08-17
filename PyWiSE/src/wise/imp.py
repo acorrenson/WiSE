@@ -1,10 +1,14 @@
 from abc import abstractmethod
 from dataclasses import dataclass
 
+import sympy
+import z3
+from sympy import Symbol
+from sympy.logic.boolalg import BooleanTrue, BooleanFalse, Boolean
+
 ##############
 ### Syntax ###
 ##############
-import z3
 
 """
 Definition ident := string.
@@ -28,6 +32,10 @@ class Aexpr:
     def to_smt(self) -> z3.ArithRef:
         raise NotImplementedError()
 
+    @abstractmethod
+    def to_sym(self) -> sympy.Expr:
+        raise NotImplementedError()
+
 
 @dataclass(frozen=True)
 class Var(Aexpr):
@@ -39,6 +47,9 @@ class Var(Aexpr):
     def to_smt(self) -> z3.ArithRef:
         return z3.Int(self.ident)
 
+    def to_sym(self) -> sympy.Expr:
+        return Symbol(self.ident, integer=True)
+
 
 @dataclass(frozen=True)
 class Cst(Aexpr):
@@ -49,6 +60,10 @@ class Cst(Aexpr):
 
     def to_smt(self) -> z3.ArithRef:
         return z3.IntVal(self.num)
+
+    @abstractmethod
+    def to_sym(self) -> sympy.Expr:
+        return sympy.Integer(self.num)
 
 
 @dataclass(frozen=True)
@@ -62,6 +77,9 @@ class Add(Aexpr):
     def to_smt(self) -> z3.ArithRef:
         return self.left.to_smt() + self.right.to_smt()
 
+    def to_sym(self) -> sympy.Expr:
+        return sympy.Add(self.left.to_sym(), self.right.to_sym())
+
 
 @dataclass(frozen=True)
 class Sub(Aexpr):
@@ -73,6 +91,11 @@ class Sub(Aexpr):
 
     def to_smt(self) -> z3.ArithRef:
         return self.left.to_smt() - self.right.to_smt()
+
+    def to_sym(self) -> sympy.Expr:
+        return sympy.Add(
+            self.left.to_sym(), sympy.Mul(sympy.Integer(-1), self.right.to_sym())
+        )
 
 
 """
@@ -91,6 +114,10 @@ class Bexpr:
     def to_smt(self) -> z3.BoolRef:
         raise NotImplementedError()
 
+    @abstractmethod
+    def to_sym(self) -> Boolean:
+        raise NotImplementedError()
+
 
 @dataclass(frozen=True)
 class Bcst(Bexpr):
@@ -101,6 +128,9 @@ class Bcst(Bexpr):
 
     def to_smt(self) -> z3.BoolRef:
         return z3.BoolVal(self.b)
+
+    def to_sym(self) -> Boolean:
+        return BooleanTrue() if self.b else BooleanFalse()
 
 
 @dataclass(frozen=True)
@@ -114,6 +144,9 @@ class Ble(Bexpr):
     def to_smt(self) -> z3.BoolRef:
         return self.left.to_smt() <= self.right.to_smt()
 
+    def to_sym(self) -> Boolean:
+        return sympy.Le(self.left.to_sym(), self.right.to_sym())
+
 
 @dataclass(frozen=True)
 class Beq(Bexpr):
@@ -126,6 +159,9 @@ class Beq(Bexpr):
     def to_smt(self) -> z3.BoolRef:
         return self.left.to_smt() == self.right.to_smt()
 
+    def to_sym(self) -> Boolean:
+        return sympy.Eq(self.left.to_sym(), self.right.to_sym())
+
 
 @dataclass(frozen=True)
 class Bnot(Bexpr):
@@ -136,6 +172,9 @@ class Bnot(Bexpr):
 
     def to_smt(self) -> z3.BoolRef:
         return z3.Not(self.expr.to_smt())
+
+    def to_sym(self) -> Boolean:
+        return sympy.Not(self.expr.to_sym())
 
 
 @dataclass(frozen=True)
@@ -148,6 +187,9 @@ class Band(Bexpr):
 
     def to_smt(self) -> z3.BoolRef:
         return z3.And(self.left.to_smt(), self.right.to_smt())
+
+    def to_sym(self) -> Boolean:
+        return sympy.And(self.left.to_sym(), self.right.to_sym())
 
 
 def Bor(b1: Bexpr, b2: Bexpr) -> Bexpr:

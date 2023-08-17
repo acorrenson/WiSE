@@ -8,7 +8,7 @@ from wise.bugfinder import (
     find_bugs_assuming,
     Finished,
 )
-from wise.helpers import is_unsat, simplify_expr, simplify_store
+from wise.helpers import is_unsat, simplify_expr, simplify_store_sympy, simplify_store
 from wise.imp import *
 from wise.parser import parse_imp, parse_bexpr
 from wise.streams import peek
