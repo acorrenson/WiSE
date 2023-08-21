@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <link href="coqdoc.css" rel="stylesheet" type="text/css" />
+  <link href="coqdocjs.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="config.js"></script>
+  <script type="text/javascript" src="coqdocjs.js"></script>
+</head>
+
+<body onload="document.getElementById('content').focus()">
+  <div id="header">
+    <span class="left">
+      <span class="modulename">
+        <script> document.write(document.title) </script>
+      </span>
+    </span>
+
+    <span class="button" id="toggle-proofs"></span>
+
+    <span class="right">
+      <a href="../">Project Page</a>
+      <a href="./indexpage.html"> Index </a>
+      <a href="./toc.html"> Table of Contents </a>
+    </span>
+  </div>
+  <div id="content" tabindex="-1" onblur="document.getElementById('content').focus()">
+    <div id="main">
+      <h1 id="navigating-the-coq-development">Navigating the Coq
+        Development</h1>
+      <p>WiSE is a symbolic execution based bug finder implemented an proven
+        correct in Coq. Coq is a purely functional programming language that can
+        also be used as a proof assistant to formalize mathematics and prove
+        theorems. This document aims at guiding the readers through the Coq
+        sources of WiSE.</p>
+      <h2 id="how-to-read-wise-sources">How to read WiSE sources</h2>
+      <p>The source code of WiSE is composed of 3 sorts of objects: code that
+        can be executed, mathematical definitions, and mathematical proofs.</p>
+      <h3 id="code-and-definitions">Code and definitions</h3>
+      <p>Code and mathematical definitions are written in the purely
+        functional language of Coq, and resembles OCaml, Haskell or any other
+        functional language. For example, an inductive data type definition
+        looks like this:</p>
+      <pre class="coq">
+        <code>
+Inductive expr : Type :=
+  | Var (s : string)
+  | Add (e1 e2 : expr)
+  | ...
+        </code>
+      </pre>
+      <p>Functions are defined using the keywords <code>Definition</code> or
+        <code>Fixpoint</code> (for recursive functions). Below are 2 examples of
+        function definitions :
+      </p>
+      <pre class="coq">
+        <code>
+Definition Double (e : expr) : expr := Add e e.
+
+Fixpoint eq_expr (e1 e2 : expr) : bool :=
+  match e1, e2 with
+  | Var s1, Var s2 =&gt; s1 =? s2
+  | ...
+        </code>
+      </pre>
+      <h3 id="theorems-and-proofs">Theorems and proofs</h3>
+      <p>Theorems and their proofs start with the keyword <code>Theorem</code>
+        or <code>Lemma</code>, followed by the name of the theorem, and then
+        followed by a <em>proof script</em>.</p>
+      <pre class="coq">
+        <code>
+Lemma eq_expr_correct:
+  forall e1 e2, eq_expr e1 e2 = true &lt;-&gt; e1 = e2.
+Proof.
+  induction e1, e2.
+  ...
+Qed.
+        </code>
+      </pre>
+      <p>Note that <strong>proof scripts are not necessarily meant to be
+          read</strong>. When the sources are compiled, the Coq compiler checks
+        the validity of all proofs.</p>
+      <h2 id="how-to-navigate-wise-sources">How to navigate WiSE sources</h2>
+      <p>To navigate the Coq sources, we strongly recommend to use the
+        interactive web documentation (link to toc.html) and to go through the
+        following selection of files in this order (from top to bottom):</p>
+      <table>
+        <thead>
+          <tr class="header">
+            <th style="text-align: left;">Module Name</th>
+            <th style="text-align: left;">Type of source</th>
+            <th style="text-align: left;">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="odd">
+            <td style="text-align: left;"><strong><a href="./WiSE.lang.imp.html">WiSE.lang.imp</a></strong></td>
+            <td style="text-align: left;">code</td>
+            <td style="text-align: left;">The definition of the target programming
+              language IMP (AST)</td>
+          </tr>
+          <tr class="even">
+            <td style="text-align: left;"><strong><a href="./WiSE.lang.imp.html">WiSE.lang.imp</a></strong></td>
+            <td style="text-align: left;">definitions</td>
+            <td style="text-align: left;">A mathematical description of IMP&#x2019;s
+              execution model (concrete semantics)</td>
+          </tr>
+          <tr class="odd">
+            <td style="text-align: left;"><strong><a href="./WiSE.symbolic.symex.html">WiSE.symbolic.symex</a></strong>
+            </td>
+            <td style="text-align: left;">definitions</td>
+            <td style="text-align: left;">A mathematical description of IMP&#x2019;s
+              symbolic execution model (symbolic semantics)</td>
+          </tr>
+          <tr class="even">
+            <td style="text-align: left;"><strong><a href="./WiSE.symbolic.symex.html">WiSE.symbolic.symex</a></strong>
+            </td>
+            <td style="text-align: left;">proofs</td>
+            <td style="text-align: left;">A formal proof that the symbolic execution
+              model is consistent with respect to the concrete one</td>
+          </tr>
+          <tr class="odd">
+            <td style="text-align: left;"><strong><a
+                  href="./WiSE.implem.bugfinder.html">WiSE.implem.bugfinder</a></strong></td>
+            <td style="text-align: left;">code</td>
+            <td style="text-align: left;">A purely functional and <strong>executable
+                implementation</strong> of a bug finder based on the symbolic execution
+              model</td>
+          </tr>
+          <tr class="even">
+            <td style="text-align: left;"><strong><a
+                  href="./WiSE.implem.bugfinder_proof.html">WiSE.implem.bugfinder_proof</a></strong></td>
+            <td style="text-align: left;">proofs</td>
+            <td style="text-align: left;">A proof that the bug finder implementation
+              only finds true bugs and can eventually discover all bugs</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>The other Coq files contain auxillary definitions that are not
+        relevant to the understanding of the development. Nonetheless, all files
+        are <a href="./toc.html">extensively documented</a></p>
+
+    </div>
+    <div id="footer">
+      Generated by <a href="http://coq.inria.fr/">coqdoc</a> and improved with <a
+        href="https://github.com/tebbi/coqdocjs">CoqdocJS</a>
+    </div>
+  </div>
+</body>
+
+</html>
