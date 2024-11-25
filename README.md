@@ -1,7 +1,8 @@
 # WiSE
 
 **WiSE** (**W**hat **i**s **S**ymbolic **E**xecution) is a formally (mechanically) verified symbolic execution-based bug-finder for imperative programs.
-The motivation and underlying principles of WiSE are presented in our paper "Engineering a Formally Verified Automated Bug Finder" ([Preprint on ArXiv](https://arxiv.org/abs/2305.05570)).
+The motivation and underlying principles of WiSE are presented in our paper "Engineering a Formally Verified Automated Bug Finder" published at ESEC/FSE
+in 2023. ([Preprint on ArXiv](https://arxiv.org/abs/2305.05570), [ACM link](https://dl.acm.org/doi/10.1145/3611643.3616290)).
 
 This repository provides
 
